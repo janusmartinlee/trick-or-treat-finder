@@ -1,7 +1,14 @@
 # Trick or Treat Finder
 
 ## Project Context
-This application helps connect Halloween trick-or-treaters with homes offering treats. Built using Flutter for the mobile frontend and planned for a .NET backend (separate repository), this project follows Domain-Driven Design principles and test-driven development practices.
+This application helps connect Halloween trick-or-treaters with homes offering treats. Built using Flutter for the mobile frontend and .NET backend (using .NET Aspire), this project follows Domain-Driven Design principles and test-driven development practices.
+
+## Development Approach
+- **Trunk Based Development**: Main branch is always deployable
+- **Continuous Integration**: Automated builds and tests on every commit
+- **BDD First**: Behavior-driven development driving both implementation and test coverage
+- **Idiomatic Code**: Following Flutter/Dart style guidelines and best practices
+- **.NET Aspire**: Cloud-native application platform for backend services
 
 ## Core Domain Concepts
 - **TreatingLocation**: A registered home offering treats
@@ -80,13 +87,13 @@ This application helps connect Halloween trick-or-treaters with homes offering t
 - **Strategy Pattern**: Map providers and navigation
 
 ## Development Workflow
-1. Feature Branch Strategy
-2. TDD Workflow:
+
+1. TDD Workflow:
    - Write failing test
    - Implement feature
    - Refactor
-3. BDD Scenarios for key features
-4. PR Reviews with test coverage requirements
+2. BDD Scenarios driving development
+3. Continuous trunk-based development
 
 ## Getting Started
 (Development setup instructions will go here)
@@ -118,9 +125,10 @@ lib/
 - Comprehensive documentation
 - Test coverage requirements
 
-## Quality Gates
-- 80%+ test coverage
+## Quality Standards
+
+- Idiomatic Dart/Flutter code style
 - Performance benchmarks
 - Accessibility requirements
 - Security scanning
-- Code style enforcement
+- Comprehensive BDD test coverage

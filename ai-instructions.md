@@ -105,6 +105,119 @@ Key scenarios to test:
 - Minimize dependencies between modules
 - Infrastructure code should depend on domain, never vice versa
 
+### High Cohesion Examples in Flutter/Dart
+
+#### Good Cohesion ✅
+```dart
+// Feature-based organization
+treating_location/
+  ├── domain/
+  │   ├── treating_location.dart       // Core domain entity
+  │   ├── treating_period.dart         // Value object
+  │   └── location_repository.dart     // Repository interface
+  ├── infrastructure/
+  │   └── firebase_location_repo.dart  // Implementation
+  ├── application/
+  │   └── location_service.dart        // Use cases
+  └── presentation/
+      ├── location_page.dart           // UI
+      ├── location_state.dart          // Local state
+      └── widgets/                     // Location-specific widgets
+```
+
+#### Poor Cohesion ❌
+```dart
+lib/
+  ├── models/                    // Mixed domain concepts
+  │   ├── location.dart
+  │   ├── user.dart
+  │   └── session.dart
+  ├── repositories/             // Mixed infrastructure
+  │   ├── location_repo.dart
+  │   └── user_repo.dart
+  └── screens/                  // Mixed UI
+      ├── location_screen.dart
+      └── user_screen.dart
+```
+
+#### Cohesion Guidelines
+1. **State Management**
+   - State lives with its feature, not globally
+   - UI and state updates stay within feature boundaries
+   - Cross-feature communication via domain events
+
+2. **Widget Organization**
+   - Widgets that change together live together
+   - Shared widgets only if truly reusable across features
+   - Feature-specific widgets stay in feature folder
+
+3. **Domain Logic**
+   - Business rules stay with their entity
+   - Validation close to data structures
+   - Use cases orchestrate domain objects
+
+4. **Infrastructure Code**
+   - Implementation details isolated per feature
+   - Shared infrastructure behind interfaces
+   - Feature-specific adapters with feature code
+
+#### Practical Example: Location Registration
+
+```dart
+// High cohesion - everything related to location registration together
+class LocationRegistration {
+  final LocationRepository _repository;
+  final ValidationService _validation;
+  
+  // Domain event within the same feature
+  final _registrationEvents = StreamController<LocationRegistered>();
+  
+  Future<Result<TreatingLocation>> registerLocation({
+    required Address address,
+    required TreatingPeriod period,
+  }) async {
+    // Validation, business rules, and persistence together
+    if (!_validation.isWithinAllowedArea(address)) {
+      return Result.failure(LocationError.outsideAllowedArea);
+    }
+    
+    if (!period.isValid()) {
+      return Result.failure(LocationError.invalidPeriod);
+    }
+    
+    final location = TreatingLocation(
+      address: address,
+      period: period,
+      status: LocationStatus.pending
+    );
+    
+    await _repository.save(location);
+    _registrationEvents.add(LocationRegistered(location));
+    
+    return Result.success(location);
+  }
+}
+
+// VS Low cohesion - responsibilities scattered
+class LocationController {
+  Future<bool> registerLocation(Address address) async {
+    // Validation in controller
+    if (!isValidAddress(address)) return false;
+    // Then call service
+    return await locationService.register(address);
+  }
+}
+
+class LocationService {
+  Future<bool> register(Address address) async {
+    // Business rules here
+    if (!BusinessRules.checkAddress(address)) return false;
+    // Then call repository
+    return await repository.save(address);
+  }
+}
+```
+
 ### Testing Priorities
 - Focus on behavior and integration tests
 - Unit tests for complex domain logic

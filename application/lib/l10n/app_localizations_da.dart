@@ -43,5 +43,5 @@ class AppLocalizationsDa extends AppLocalizations {
   String get languageDanish => 'Dansk';
 
   @override
-  String get findTreats => 'Find Godbidder';
+  String get findTreats => 'Find slik';
 }

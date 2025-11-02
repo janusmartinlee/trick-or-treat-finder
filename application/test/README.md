@@ -44,6 +44,7 @@ Use Ctrl+Shift+P → "Tasks: Run Task" and select:
 ### Configuration
 
 Test settings are configured in `dart_test.yaml`:
+
 - Default concurrency: 4 workers
 - Timeout: 30 seconds
 - Optimized for parallel execution
@@ -59,18 +60,21 @@ Test settings are configured in `dart_test.yaml`:
 ## Test Types
 
 ### Unit Tests (`test/unit/`)
+
 - Pure business logic testing
 - No UI dependencies
 - Fastest execution
 - Perfect for TDD
 
 ### Feature Tests (`test/features/`)
+
 - BDD-style scenario testing
 - End-to-end use case validation
 - Business-readable test names
 - Integration testing without UI
 
 ### Widget Tests (`test/widget_test.dart`)
+
 - UI component testing
 - User interaction simulation
 - Visual regression testing

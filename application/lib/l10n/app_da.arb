@@ -44,7 +44,7 @@
   "@languageDanish": {
     "description": "Danish language option"
   },
-  "findTreats": "Find Godbidder",
+  "findTreats": "Find slik",
   "@findTreats": {
     "description": "Button text for finding treats"
   }

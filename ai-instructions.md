@@ -26,11 +26,11 @@ When generating code, the assistant should provide:
 - How to structure the tests
 - Key test scenarios to cover
 
-### 5. Code Organization
-- File structure and placement
-- Dependency management
-- Interface definitions
-- Separation of concerns
+### 5. Code Structure
+- Feature/domain concept organization
+- Key dependencies and their direction
+- Interface boundaries
+- Component responsibilities and interactions
 
 ## Response Format
 
@@ -85,10 +85,28 @@ Key scenarios to test:
 \`\`\`
 ```
 
-## General Guidelines
-- Always explain architectural decisions
-- Show how code supports testing
-- Highlight Flutter/Dart best practices
-- Reference DDD concepts where relevant
-- Consider future maintainability
-- Consider performance implications
+## Design Principles
+
+### Primary Focus
+- Strong separation of concerns between layers and components
+- High cohesion within modules (things that change together stay together)
+- Clear boundaries between bounded contexts
+- Domain logic isolation from infrastructure concerns
+
+### Secondary Considerations
+- Pragmatic approach to implementation details
+- Focus on behavior correctness over code aesthetics
+- Performance considerations where relevant
+- Flutter/Dart idioms where they don't conflict with primary concerns
+
+### Code Organization Philosophy
+- Group by feature/domain concept rather than technical layer
+- Keep related code close together
+- Minimize dependencies between modules
+- Infrastructure code should depend on domain, never vice versa
+
+### Testing Priorities
+- Focus on behavior and integration tests
+- Unit tests for complex domain logic
+- Less emphasis on test aesthetics, more on coverage of critical paths
+- Tests should validate boundaries between contexts

@@ -148,14 +148,18 @@ class SettingsView extends StatelessWidget {
     ThemeMode currentTheme,
     IconData icon,
   ) {
-    return RadioListTile<ThemeMode>(
-      value: themeMode,
-      groupValue: currentTheme,
-      onChanged: (value) {
-        if (value != null) {
-          context.read<SettingsBloc>().add(UpdateThemeMode(value));
-        }
-      },
+    return ListTile(
+      leading: Radio<ThemeMode>(
+        value: themeMode,
+        // ignore: deprecated_member_use
+        groupValue: currentTheme,
+        // ignore: deprecated_member_use
+        onChanged: (value) {
+          if (value != null) {
+            context.read<SettingsBloc>().add(UpdateThemeMode(value));
+          }
+        },
+      ),
       title: Row(
         children: [
           Icon(icon, size: 20),
@@ -164,7 +168,9 @@ class SettingsView extends StatelessWidget {
         ],
       ),
       subtitle: Text(subtitle),
-      contentPadding: EdgeInsets.zero,
+      onTap: () {
+        context.read<SettingsBloc>().add(UpdateThemeMode(themeMode));
+      },
     );
   }
 
@@ -217,17 +223,32 @@ class SettingsView extends StatelessWidget {
     Locale locale,
     Locale currentLocale,
   ) {
-    return RadioListTile<Locale>(
-      value: locale,
-      groupValue: currentLocale,
-      onChanged: (value) {
-        if (value != null) {
-          context.read<SettingsBloc>().add(UpdateLocale(value));
-        }
-      },
-      title: Text(title),
+    return ListTile(
+      leading: Radio<Locale>(
+        value: locale,
+        // ignore: deprecated_member_use
+        groupValue: currentLocale,
+        // ignore: deprecated_member_use
+        onChanged: (value) {
+          if (value != null) {
+            context.read<SettingsBloc>().add(UpdateLocale(value));
+          }
+        },
+      ),
+      title: Row(
+        children: [
+          Text(
+            _getFlagEmoji(locale),
+            style: const TextStyle(fontSize: 20),
+          ),
+          const SizedBox(width: 12),
+          Text(title),
+        ],
+      ),
       subtitle: Text('${locale.languageCode.toUpperCase()} - ${locale.countryCode}'),
-      contentPadding: EdgeInsets.zero,
+      onTap: () {
+        context.read<SettingsBloc>().add(UpdateLocale(locale));
+      },
     );
   }
 
@@ -243,6 +264,21 @@ class SettingsView extends StatelessWidget {
         return 'Français';
       default:
         return locale.languageCode.toUpperCase();
+    }
+  }
+
+  String _getFlagEmoji(Locale locale) {
+    switch (locale.countryCode) {
+      case 'US':
+        return '🇺🇸';
+      case 'DK':
+        return '🇩🇰';
+      case 'ES':
+        return '🇪🇸';
+      case 'FR':
+        return '🇫🇷';
+      default:
+        return '🌍'; // Globe emoji as fallback
     }
   }
 }

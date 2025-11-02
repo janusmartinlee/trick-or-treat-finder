@@ -356,7 +356,7 @@ classDiagram
     Visit "*" -- "1" TreatingLocation
 ```
 
-# Value Objects
+## Value Objects
 
 ```mermaid
 classDiagram
@@ -382,7 +382,7 @@ classDiagram
     }
 ```
 
-# Aggregates
+## Aggregates
 
 ```mermaid
 classDiagram

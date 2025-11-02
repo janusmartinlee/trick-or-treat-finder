@@ -17,35 +17,35 @@ abstract class AppException implements Exception {
 /// Domain-specific exceptions
 class DomainException extends AppException {
   const DomainException(
-    String message, {
-    String? code,
-    dynamic originalException,
-  }) : super(message, code: code, originalException: originalException);
+    super.message, {
+    super.code,
+    super.originalException,
+  });
 }
 
 /// Infrastructure-specific exceptions
 class InfrastructureException extends AppException {
   const InfrastructureException(
-    String message, {
-    String? code,
-    dynamic originalException,
-  }) : super(message, code: code, originalException: originalException);
+    super.message, {
+    super.code,
+    super.originalException,
+  });
 }
 
 /// Network-related exceptions
 class NetworkException extends InfrastructureException {
   const NetworkException(
-    String message, {
-    String? code,
-    dynamic originalException,
-  }) : super(message, code: code, originalException: originalException);
+    super.message, {
+    super.code,
+    super.originalException,
+  });
 }
 
 /// Cache-related exceptions
 class CacheException extends InfrastructureException {
   const CacheException(
-    String message, {
-    String? code,
-    dynamic originalException,
-  }) : super(message, code: code, originalException: originalException);
+    super.message, {
+    super.code,
+    super.originalException,
+  });
 }

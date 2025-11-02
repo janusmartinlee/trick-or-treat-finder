@@ -1,6 +1,7 @@
 # Event Storming - Trick or Treat Finder
 
 ## Legend Description
+
 - **Orange Boxes (Domain Events)**: Things that have happened in the system
 - **Blue Boxes (Commands)**: User actions that trigger events
 - **Green Boxes (Aggregates)**: Clusters of domain objects that maintain consistency
@@ -83,6 +84,7 @@ flowchart LR
 ## Domain Events (Orange)
 
 ### User Registration Flow
+
 - HomeownerRegistered
 - LocationVerificationRequested
 - LocationVerified
@@ -93,6 +95,7 @@ flowchart LR
 - GuardianVerificationCompleted
 
 ### Location Management
+
 - LocationRegistered
 - StatusUpdated
 - DescriptionUpdated
@@ -108,6 +111,7 @@ flowchart LR
 - AccessPointDeactivated
 
 ### Queue Management
+
 - QueueLengthUpdated
 - WaitTimeUpdated
 - QueueTrendChanged
@@ -116,6 +120,7 @@ flowchart LR
 - PeakTimeIdentified
 
 ### Special Location Events
+
 - HauntedHouseRegistered
 - DurationEstimateUpdated
 - ExitPointRegistered
@@ -123,12 +128,14 @@ flowchart LR
 - SpecialInstructionsUpdated
 
 ### Route Planning
+
 - RouteFiltered
 - ScareLevelPreferenceSet
 - MaxScareLevelExceeded
 - RouteScareLevelAdjusted
 
 ### Trick or Treating
+
 - TreatingSessionStarted
 - TreatingSessionEnded
 - CandySupplyUpdated
@@ -138,6 +145,7 @@ flowchart LR
 - RouteCompleted
 
 ### Safety & Tracking
+
 - LocationTrackingEnabled
 - LocationTrackingDisabled
 - GeofenceViolationDetected
@@ -146,6 +154,7 @@ flowchart LR
 - CustodyScheduleUpdated
 
 ### Family Management
+
 - GuardianAccessGranted
 - GuardianAccessRevoked
 - ChildLocationShared
@@ -154,6 +163,7 @@ flowchart LR
 - VisitorCountIncremented
 
 ### Search & Discovery
+
 - AreaSearched
 - LocationViewed
 - RouteGenerated
@@ -162,6 +172,7 @@ flowchart LR
 ## Commands (Blue)
 
 ### Homeowner Commands
+
 - RegisterLocation
 - UpdateStatus
 - UpdateDescription
@@ -170,6 +181,7 @@ flowchart LR
 - UpdateCandySupply
 
 ### Trick or Treater Commands
+
 - SearchArea
 - ViewLocationDetails
 - GenerateRoute
@@ -178,51 +190,55 @@ flowchart LR
 ## Aggregates (Green)
 
 ### TreatingLocation
+
 - Properties:
-  * LocationId
-  * Address
-  * Status
-  * Description
-  * CandySupply
-  * SafetyRating
+  - LocationId
+  - Address
+  - Status
+  - Description
+  - CandySupply
+  - SafetyRating
 - Behaviors:
-  * Update Status
-  * Manage Sessions
-  * Track Visitors
+  - Update Status
+  - Manage Sessions
+  - Track Visitors
 
 ### TreatingSession
+
 - Properties:
-  * SessionId
-  * StartTime
-  * EndTime
-  * VisitorCount
+  - SessionId
+  - StartTime
+  - EndTime
+  - VisitorCount
 - Behaviors:
-  * Track Visitors
-  * Calculate Duration
+  - Track Visitors
+  - Calculate Duration
 
 ## Policies (Pink)
 
 - NotificationPolicy
-  * Trigger: StatusUpdated
-  * Action: Notify nearby trick-or-treaters
+  - Trigger: StatusUpdated
+  - Action: Notify nearby trick-or-treaters
 
 - SafetyPolicy
-  * Trigger: SafetyAlertTriggered
-  * Action: Review location status
+  - Trigger: SafetyAlertTriggered
+  - Action: Review location status
 
 - CrowdManagementPolicy
-  * Trigger: VisitorCountIncremented
-  * Action: Update wait times
+  - Trigger: VisitorCountIncremented
+  - Action: Update wait times
 
 ## Read Models (Purple)
 
 ### LocationMap
+
 - Active treating locations
 - Status indicators
 - Safety ratings
 - Wait times
 
 ### TreatingHistory
+
 - Past sessions
 - Visitor statistics
 - Popular times

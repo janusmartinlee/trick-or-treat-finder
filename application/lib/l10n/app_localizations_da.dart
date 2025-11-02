@@ -15,8 +15,7 @@ class AppLocalizationsDa extends AppLocalizations {
   String get welcomeMessage => 'Velkommen til Trick or Treat Finder!';
 
   @override
-  String get welcomeSubtitle =>
-      'Find de bedste Halloween godbidder i dit nabolag';
+  String get welcomeSubtitle => 'Find det bedste Halloween slik i dit nabolag';
 
   @override
   String get settings => 'Indstillinger';

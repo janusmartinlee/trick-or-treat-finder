@@ -8,7 +8,7 @@
   "@welcomeMessage": {
     "description": "Welcome message displayed on the home screen"
   },
-  "welcomeSubtitle": "Find de bedste Halloween godbidder i dit nabolag",
+  "welcomeSubtitle": "Find det bedste Halloween slik i dit nabolag",
   "@welcomeSubtitle": {
     "description": "Subtitle displayed on the home screen"
   },

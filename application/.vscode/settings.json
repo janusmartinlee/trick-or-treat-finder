@@ -1,0 +1,38 @@
+{
+    // Flutter/Dart test configuration for VS Code Testing pane
+    "dart.flutterTestAdditionalArgs": [
+        "--concurrency=4",
+        "--reporter=json"
+    ],
+    "dart.testAdditionalArgs": [
+        "--concurrency=4"
+    ],
+    
+    // Force VS Code to use our optimized test runner
+    "dart.cliAdditionalArgs": [
+        "--concurrency=4"
+    ],
+    
+    // Test discovery settings
+    "dart.runPubGetOnPubspecChanges": "always",
+    "dart.previewFlutterUiGuides": true,
+    
+    // Performance optimizations
+    "dart.analysisServerFolding": true,
+    "dart.maxLogLineLength": 2000,
+    
+    // Test execution settings
+    "dart.promptToGetPackages": false,
+    "dart.automaticallyProvideCompletions": true,
+    
+    // Test UI settings
+    "dart.showTestCodeLens": true,
+    "dart.showMainCodeLens": false,
+    "dart.enableTestStatusCodeLens": true,
+    
+    // Workspace settings
+    "files.exclude": {
+        "**/build/": true,
+        "**/.dart_tool/": true
+    }
+}

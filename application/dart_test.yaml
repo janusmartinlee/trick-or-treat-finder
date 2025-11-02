@@ -1,0 +1,12 @@
+# Dart test configuration for optimal performance
+# This file configures test execution settings for both CLI and IDE
+
+# Global settings that VS Code should respect
+concurrency: 4
+timeout: 30s
+
+# Test discovery patterns
+test_on: "vm"
+
+# Performance optimizations
+chain_stack_traces: false

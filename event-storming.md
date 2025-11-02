@@ -87,17 +87,70 @@ flowchart LR
 - LocationVerificationRequested
 - LocationVerified
 - ProfileCompleted
+- GuardianRegistered
+- ChildAccountCreated
+- ParentalConsentGranted
+- GuardianVerificationCompleted
 
 ### Location Management
 - LocationRegistered
 - StatusUpdated
 - DescriptionUpdated
 - LocationDeactivated
+- AreaCreated
+- AreaUpdated
+- SafetyRatingChanged
+- ScareLevelSet
+- ScareLevelUpdated
+- ScareDescriptionChanged
+- AccessPointAdded
+- AccessPointUpdated
+- AccessPointDeactivated
+
+### Queue Management
+- QueueLengthUpdated
+- WaitTimeUpdated
+- QueueTrendChanged
+- HighQueueAlertTriggered
+- QueueHistoryRecorded
+- PeakTimeIdentified
+
+### Special Location Events
+- HauntedHouseRegistered
+- DurationEstimateUpdated
+- ExitPointRegistered
+- CapacityLimitReached
+- SpecialInstructionsUpdated
+
+### Route Planning
+- RouteFiltered
+- ScareLevelPreferenceSet
+- MaxScareLevelExceeded
+- RouteScareLevelAdjusted
 
 ### Trick or Treating
 - TreatingSessionStarted
 - TreatingSessionEnded
 - CandySupplyUpdated
+- VisitRecorded
+- RouteCreated
+- RoutePlanned
+- RouteCompleted
+
+### Safety & Tracking
+- LocationTrackingEnabled
+- LocationTrackingDisabled
+- GeofenceViolationDetected
+- EmergencyAlertTriggered
+- SafetySettingsUpdated
+- CustodyScheduleUpdated
+
+### Family Management
+- GuardianAccessGranted
+- GuardianAccessRevoked
+- ChildLocationShared
+- EmergencyContactUpdated
+- AllowedAreasUpdated
 - VisitorCountIncremented
 
 ### Search & Discovery

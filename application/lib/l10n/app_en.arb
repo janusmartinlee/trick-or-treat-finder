@@ -1,0 +1,43 @@
+{
+  "@@locale": "en",
+  "appTitle": "Trick or Treat Finder",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "welcome": "Welcome to Trick or Treat Finder!",
+  "@welcome": {
+    "description": "Welcome message displayed on the home screen"
+  },
+  "findTreats": "Find the best Halloween treats in your neighborhood",
+  "@findTreats": {
+    "description": "Subtitle on the home screen describing the app's purpose"
+  },
+  "searchTooltip": "Find Treats",
+  "@searchTooltip": {
+    "description": "Tooltip for the search floating action button"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings page title"
+  },
+  "theme": "Theme",
+  "@theme": {
+    "description": "Theme settings section title"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Language settings section title"
+  },
+  "systemDefault": "System Default",
+  "@systemDefault": {
+    "description": "System default theme option"
+  },
+  "lightTheme": "Light",
+  "@lightTheme": {
+    "description": "Light theme option"
+  },
+  "darkTheme": "Dark",
+  "@darkTheme": {
+    "description": "Dark theme option"
+  }
+}

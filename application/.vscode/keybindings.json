@@ -1,0 +1,17 @@
+[
+    {
+        "key": "ctrl+shift+t",
+        "command": "workbench.action.tasks.runTask",
+        "args": "Test All Fast"
+    },
+    {
+        "key": "ctrl+shift+u", 
+        "command": "workbench.action.tasks.runTask",
+        "args": "Test Unit Only"
+    },
+    {
+        "key": "ctrl+shift+f",
+        "command": "workbench.action.tasks.runTask", 
+        "args": "Test Features Only"
+    }
+]

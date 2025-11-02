@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_da.dart';
 import 'app_localizations_en.dart';
 
 // ignore_for_file: type=lint
@@ -92,9 +93,12 @@ abstract class AppLocalizations {
       ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[Locale('en')];
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('da'),
+    Locale('en'),
+  ];
 
-  /// The title of the application
+  /// Title of the application
   ///
   /// In en, this message translates to:
   /// **'Trick or Treat Finder'**
@@ -104,19 +108,13 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Welcome to Trick or Treat Finder!'**
-  String get welcome;
+  String get welcomeMessage;
 
-  /// Subtitle on the home screen describing the app's purpose
+  /// Subtitle displayed on the home screen
   ///
   /// In en, this message translates to:
   /// **'Find the best Halloween treats in your neighborhood'**
-  String get findTreats;
-
-  /// Tooltip for the search floating action button
-  ///
-  /// In en, this message translates to:
-  /// **'Find Treats'**
-  String get searchTooltip;
+  String get welcomeSubtitle;
 
   /// Settings page title
   ///
@@ -124,35 +122,53 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settings;
 
-  /// Theme settings section title
+  /// Theme setting label
   ///
   /// In en, this message translates to:
   /// **'Theme'**
   String get theme;
 
-  /// Language settings section title
+  /// Language setting label
   ///
   /// In en, this message translates to:
   /// **'Language'**
   String get language;
 
-  /// System default theme option
-  ///
-  /// In en, this message translates to:
-  /// **'System Default'**
-  String get systemDefault;
-
   /// Light theme option
   ///
   /// In en, this message translates to:
   /// **'Light'**
-  String get lightTheme;
+  String get themeLight;
 
   /// Dark theme option
   ///
   /// In en, this message translates to:
   /// **'Dark'**
-  String get darkTheme;
+  String get themeDark;
+
+  /// System theme option
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get themeSystem;
+
+  /// English language option
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageEnglish;
+
+  /// Danish language option
+  ///
+  /// In en, this message translates to:
+  /// **'Danish'**
+  String get languageDanish;
+
+  /// Button text for finding treats
+  ///
+  /// In en, this message translates to:
+  /// **'Find Treats'**
+  String get findTreats;
 }
 
 class _AppLocalizationsDelegate
@@ -166,7 +182,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en'].contains(locale.languageCode);
+      <String>['da', 'en'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -175,6 +191,8 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'da':
+      return AppLocalizationsDa();
     case 'en':
       return AppLocalizationsEn();
   }

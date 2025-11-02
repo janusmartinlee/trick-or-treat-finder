@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/theme/app_theme.dart';
 import 'core/dependency_injection.dart';
 import 'presentation/settings/settings_page.dart';
 import 'presentation/app/app_bloc.dart';
 import 'application/use_cases/preferences_use_case.dart';
+import 'l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +34,16 @@ class TrickOrTreatApp extends StatelessWidget {
               darkTheme: AppTheme.darkTheme,
               themeMode: state.preferences.themeMode,
               locale: state.preferences.locale,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: const [
+                Locale('en', 'US'),
+                Locale('da', 'DK'),
+              ],
               home: const HomePage(),
             );
           }
@@ -42,6 +54,16 @@ class TrickOrTreatApp extends StatelessWidget {
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: ThemeMode.system,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en', 'US'),
+              Locale('da', 'DK'),
+            ],
             home: const Scaffold(
               body: Center(
                 child: CircularProgressIndicator(),
@@ -59,9 +81,11 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Trick or Treat Finder'),
+        title: Text(localizations.appTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -72,31 +96,31 @@ class HomePage extends StatelessWidget {
                 ),
               );
             },
-            tooltip: 'Settings',
+            tooltip: localizations.settings,
           ),
         ],
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.location_on,
               size: 80,
               color: Colors.orange,
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             Text(
-              'Welcome to Trick or Treat Finder!',
-              style: TextStyle(
+              localizations.welcomeMessage,
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
-              'Find the best Halloween treats in your neighborhood',
-              style: TextStyle(
+              localizations.welcomeSubtitle,
+              style: const TextStyle(
                 fontSize: 16,
                 color: Colors.grey,
               ),
@@ -109,7 +133,7 @@ class HomePage extends StatelessWidget {
         onPressed: () {
           // TODO: Implement location search
         },
-        tooltip: 'Find Treats',
+        tooltip: localizations.findTreats,
         child: const Icon(Icons.search),
       ),
     );

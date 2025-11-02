@@ -9,6 +9,11 @@ final GetIt serviceLocator = GetIt.instance;
 
 /// Initialize all dependencies
 Future<void> initializeDependencies() async {
+  // Check if already initialized
+  if (serviceLocator.isRegistered<TelemetryService>()) {
+    return;
+  }
+
   // Core services
   serviceLocator.registerLazySingleton<TelemetryService>(
     () => TelemetryService.instance,

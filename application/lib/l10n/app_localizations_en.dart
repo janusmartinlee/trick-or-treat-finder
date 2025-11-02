@@ -12,14 +12,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Trick or Treat Finder';
 
   @override
-  String get welcome => 'Welcome to Trick or Treat Finder!';
+  String get welcomeMessage => 'Welcome to Trick or Treat Finder!';
 
   @override
-  String get findTreats =>
+  String get welcomeSubtitle =>
       'Find the best Halloween treats in your neighborhood';
-
-  @override
-  String get searchTooltip => 'Find Treats';
 
   @override
   String get settings => 'Settings';
@@ -31,11 +28,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get language => 'Language';
 
   @override
-  String get systemDefault => 'System Default';
+  String get themeLight => 'Light';
 
   @override
-  String get lightTheme => 'Light';
+  String get themeDark => 'Dark';
 
   @override
-  String get darkTheme => 'Dark';
+  String get themeSystem => 'System';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get languageDanish => 'Danish';
+
+  @override
+  String get findTreats => 'Find Treats';
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../core/dependency_injection.dart';
 import '../../application/use_cases/preferences_use_case.dart';
+import '../../l10n/app_localizations.dart';
 import 'settings_bloc.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -22,9 +23,11 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: Text(localizations.settings),
       ),
       body: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, state) {
@@ -85,6 +88,8 @@ class SettingsView extends StatelessWidget {
   }
 
   Widget _buildThemeSection(BuildContext context, SettingsLoaded state) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -99,7 +104,7 @@ class SettingsView extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  'Theme',
+                  localizations.theme,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ],
@@ -164,8 +169,11 @@ class SettingsView extends StatelessWidget {
   }
 
   Widget _buildLanguageSection(BuildContext context, SettingsLoaded state) {
+    final localizations = AppLocalizations.of(context)!;
+    
     const supportedLocales = [
       Locale('en', 'US'),
+      Locale('da', 'DK'),
       // Add more locales when translations are available
       // Locale('es', 'ES'),
       // Locale('fr', 'FR'),
@@ -185,7 +193,7 @@ class SettingsView extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  'Language',
+                  localizations.language,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ],
@@ -227,6 +235,8 @@ class SettingsView extends StatelessWidget {
     switch (locale.languageCode) {
       case 'en':
         return 'English';
+      case 'da':
+        return 'Dansk';
       case 'es':
         return 'Español';
       case 'fr':

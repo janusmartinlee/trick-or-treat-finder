@@ -55,6 +55,19 @@ void main() {
         final updatedPreferences = await useCase.getPreferences();
         expect(updatedPreferences.locale, equals(const Locale('es', 'ES')));
       });
+
+      test('Given English locale, When user changes to Danish, Then preferences are updated', () async {
+        // Given - English locale (default)
+        final initialPreferences = await useCase.getPreferences();
+        expect(initialPreferences.locale, equals(const Locale('en', 'US')));
+
+        // When - user changes to Danish
+        await useCase.updateLocale(const Locale('da', 'DK'));
+
+        // Then - preferences are updated
+        final updatedPreferences = await useCase.getPreferences();
+        expect(updatedPreferences.locale, equals(const Locale('da', 'DK')));
+      });
     });
 
     group('Scenario: Preferences persistence', () {

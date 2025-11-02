@@ -1,34 +1,34 @@
 {
-  "@@locale": "en",
+  "@@locale": "da",
   "appTitle": "Trick or Treat Finder",
   "@appTitle": {
     "description": "Title of the application"
   },
-  "welcomeMessage": "Welcome to Trick or Treat Finder!",
+  "welcomeMessage": "Velkommen til Trick or Treat Finder!",
   "@welcomeMessage": {
     "description": "Welcome message displayed on the home screen"
   },
-  "welcomeSubtitle": "Find the best Halloween treats in your neighborhood",
+  "welcomeSubtitle": "Find de bedste Halloween godbidder i dit nabolag",
   "@welcomeSubtitle": {
     "description": "Subtitle displayed on the home screen"
   },
-  "settings": "Settings",
+  "settings": "Indstillinger",
   "@settings": {
     "description": "Settings page title"
   },
-  "theme": "Theme",
+  "theme": "Tema",
   "@theme": {
     "description": "Theme setting label"
   },
-  "language": "Language",
+  "language": "Sprog",
   "@language": {
     "description": "Language setting label"
   },
-  "themeLight": "Light",
+  "themeLight": "Lys",
   "@themeLight": {
     "description": "Light theme option"
   },
-  "themeDark": "Dark",
+  "themeDark": "Mørk",
   "@themeDark": {
     "description": "Dark theme option"
   },
@@ -36,15 +36,15 @@
   "@themeSystem": {
     "description": "System theme option"
   },
-  "languageEnglish": "English",
+  "languageEnglish": "Engelsk",
   "@languageEnglish": {
     "description": "English language option"
   },
-  "languageDanish": "Danish",
+  "languageDanish": "Dansk",
   "@languageDanish": {
     "description": "Danish language option"
   },
-  "findTreats": "Find Treats",
+  "findTreats": "Find Godbidder",
   "@findTreats": {
     "description": "Button text for finding treats"
   }

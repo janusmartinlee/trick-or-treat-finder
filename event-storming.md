@@ -1,26 +1,83 @@
 # Event Storming - Trick or Treat Finder
 
+## Legend Description
+- **Orange Boxes (Domain Events)**: Things that have happened in the system
+- **Blue Boxes (Commands)**: User actions that trigger events
+- **Green Boxes (Aggregates)**: Clusters of domain objects that maintain consistency
+- **Pink Boxes (Policies)**: Business rules that react to events
+- **Purple Boxes (Read Models)**: Views of data optimized for specific use cases
+
 ## Timeline View
 
 ```mermaid
-graph LR
-    classDef domainEvent fill:#FFA500,stroke:#000,stroke-width:2px
-    classDef command fill:#4169E1,stroke:#000,stroke-width:2px
-    classDef aggregate fill:#90EE90,stroke:#000,stroke-width:2px
-    classDef policy fill:#FFB6C1,stroke:#000,stroke-width:2px
-    classDef readModel fill:#DDA0DD,stroke:#000,stroke-width:2px
+flowchart LR
+    %% Legend
+    L1[Domain Event]:::event
+    L2[Command]:::command
+    L3[Aggregate]:::aggregate
+    L4[Policy]:::policy
+    L5[Read Model]:::readmodel
     
-    C1[Register Location]:::command --> E1[Location Registered]:::domainEvent
-    E1 --> A1[TreatingLocation]:::aggregate
-    A1 --> E2[Status Updated]:::domainEvent
-    C2[Update Status]:::command --> E2
-    E2 --> RM1[Location Map]:::readModel
+    subgraph Legend
+        L1 --- L2 --- L3 --- L4 --- L5
+    end
+
+    %% Domain Events in Orange
+    E1[User Registered]:::event
+    E2[User Logged In]:::event
+    E3[User Logged Out]:::event
+    E4[Location Registered]:::event
+    E5[Location Unregistered]:::event
+    E6[Registration Expired]:::event
     
-    C3[Search Area]:::command --> E3[Area Searched]:::domainEvent
-    E3 --> RM1
+    %% Commands in Blue
+    C1[Register User]:::command
+    C2[Login]:::command
+    C3[Logout]:::command
+    C4[Register Location]:::command
+    C5[Unregister Location]:::command
     
-    P1[Notification Policy]:::policy --> E4[Notifications Sent]:::domainEvent
-    E2 --> P1
+    %% Aggregates in Green
+    A1[User]:::aggregate
+    A2[TreatingLocation]:::aggregate
+    
+    %% Policies in Pink
+    P1[Registration Expiry Policy]:::policy
+    P2[Location Status Policy]:::policy
+    
+    %% Read Models in Purple
+    RM1[Active Locations]:::readmodel
+    RM2[User Profile]:::readmodel
+    
+    %% Flow
+    C1 --> E1
+    E1 --> A1
+    C2 --> E2
+    E2 --> A1
+    C3 --> E3
+    E3 --> A1
+    
+    C4 --> E4
+    E4 --> A2
+    C5 --> E5
+    E5 --> A2
+    
+    P1 --> E6
+    E6 --> A2
+    
+    %% Read Model Updates
+    E4 --> RM1
+    E5 --> RM1
+    E6 --> RM1
+    E1 --> RM2
+    E2 --> RM2
+    
+    %% Styling
+    classDef event fill:#FFA500,stroke:#333
+    classDef command fill:#4169E1,stroke:#333
+    classDef aggregate fill:#90EE90,stroke:#333
+    classDef policy fill:#FFB6C1,stroke:#333
+    classDef readmodel fill:#DDA0DD,stroke:#333
 ```
 
 ## Domain Events (Orange)

@@ -19,6 +19,17 @@ jobs:
       with:
         flutter-version: '3.35.7'
         channel: 'stable'
+        cache: true
+    
+    - name: Cache pub dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.pub-cache
+          application/.dart_tool
+        key: ${{ runner.os }}-pub-${{ hashFiles('application/pubspec.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-pub-
     
     - name: Install dependencies
       run: flutter pub get
@@ -45,25 +56,53 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+    
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
         flutter-version: '3.35.7'
         channel: 'stable'
+        cache: true
+    
+    - name: Cache pub dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.pub-cache
+          application/.dart_tool
+        key: ${{ runner.os }}-pub-${{ hashFiles('application/pubspec.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-pub-
+    
+    - name: Cache Gradle dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+          application/android/.gradle
+        key: ${{ runner.os }}-gradle-${{ hashFiles('application/android/gradle/wrapper/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
     
     - name: Install dependencies
       run: flutter pub get
       working-directory: ./application
     
     - name: Build Android APK
-      run: flutter build apk --release
+      run: flutter build apk --release --split-per-abi
       working-directory: ./application
     
     - name: Upload Android artifacts
       uses: actions/upload-artifact@v4
       with:
         name: android-apk
-        path: application/build/app/outputs/flutter-apk/app-release.apk
+        path: application/build/app/outputs/flutter-apk/*.apk
 
   build-web:
     name: Build Web Frontend
@@ -79,9 +118,26 @@ jobs:
       with:
         flutter-version: '3.35.7'
         channel: 'stable'
+        cache: true
+    
+    - name: Cache pub dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.pub-cache
+          application/.dart_tool
+        key: ${{ runner.os }}-pub-${{ hashFiles('application/pubspec.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-pub-
     
     - name: Install dependencies
       run: flutter pub get
+      working-directory: ./application
+    
+    - name: Enable web support and configure
+      run: |
+        flutter config --enable-web
+        flutter create . --platforms web
       working-directory: ./application
     
     - name: Build Web
@@ -121,12 +177,22 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20'
+        cache: 'npm'
     
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
         flutter-version: '3.35.7'
         channel: 'stable'
+        cache: true
+    
+    - name: Cache semantic-release
+      uses: actions/cache@v4
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-semantic-release-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-semantic-release-
     
     - name: Install semantic-release
       run: |
@@ -146,6 +212,5 @@ jobs:
     
     - name: Release
       run: semantic-release
-      working-directory: ./application
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

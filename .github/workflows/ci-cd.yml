@@ -33,8 +33,10 @@ jobs:
         path: |
           ~/.pub-cache
           application/.dart_tool
-        key: ${{ runner.os }}-pub-${{ hashFiles('application/pubspec.lock') }}
+          application/.packages
+        key: ${{ runner.os }}-pub-v2-${{ hashFiles('application/pubspec.lock', 'application/pubspec.yaml') }}
         restore-keys: |
+          ${{ runner.os }}-pub-v2-
           ${{ runner.os }}-pub-
     
     - name: Install dependencies
@@ -81,8 +83,10 @@ jobs:
         path: |
           ~/.pub-cache
           application/.dart_tool
-        key: ${{ runner.os }}-pub-${{ hashFiles('application/pubspec.lock') }}
+          application/.packages
+        key: ${{ runner.os }}-pub-v2-${{ hashFiles('application/pubspec.lock', 'application/pubspec.yaml') }}
         restore-keys: |
+          ${{ runner.os }}-pub-v2-
           ${{ runner.os }}-pub-
     
     - name: Cache Gradle dependencies
@@ -92,8 +96,10 @@ jobs:
           ~/.gradle/caches
           ~/.gradle/wrapper
           application/android/.gradle
-        key: ${{ runner.os }}-gradle-${{ hashFiles('application/android/gradle/wrapper/gradle-wrapper.properties') }}
+          application/android/app/.gradle
+        key: ${{ runner.os }}-gradle-v2-${{ hashFiles('application/android/gradle/wrapper/gradle-wrapper.properties', 'application/android/build.gradle.kts', 'application/android/app/build.gradle.kts') }}
         restore-keys: |
+          ${{ runner.os }}-gradle-v2-
           ${{ runner.os }}-gradle-
     
     - name: Install dependencies
@@ -132,7 +138,7 @@ jobs:
         path: |
           ~/.pub-cache
           application/.dart_tool
-        key: ${{ runner.os }}-pub-${{ hashFiles('application/pubspec.lock') }}
+        key: ${{ runner.os }}-pub-v2-${{ hashFiles('application/pubspec.lock', 'application/pubspec.yaml') }}
         restore-keys: |
           ${{ runner.os }}-pub-
     
@@ -178,7 +184,7 @@ jobs:
         path: |
           ~\AppData\Local\Pub\Cache
           application\.dart_tool
-        key: ${{ runner.os }}-pub-${{ hashFiles('application/pubspec.lock') }}
+        key: ${{ runner.os }}-pub-v2-${{ hashFiles('application/pubspec.lock', 'application/pubspec.yaml') }}
         restore-keys: |
           ${{ runner.os }}-pub-
     

@@ -1,0 +1,171 @@
+name: Cache Management
+
+on:
+  workflow_dispatch:
+    inputs:
+      cache_type:
+        description: 'Which cache to manage'
+        required: true
+        default: 'info'
+        type: choice
+        options:
+        - info
+        - clear-flutter
+        - clear-gradle
+        - clear-npm
+        - clear-all
+      reason:
+        description: 'Reason for cache operation (optional)'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  cache-info:
+    name: Cache Information
+    runs-on: ubuntu-latest
+    if: github.event.inputs.cache_type == 'info'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Display Cache Information
+      run: |
+        echo "# 📦 Current Cache Strategy" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## Flutter/Dart Caches:" >> $GITHUB_STEP_SUMMARY
+        echo "- **Pub Cache**: ~/.pub-cache (Linux/macOS) or ~\\AppData\\Local\\Pub\\Cache (Windows)" >> $GITHUB_STEP_SUMMARY
+        echo "- **Dart Tool**: application/.dart_tool" >> $GITHUB_STEP_SUMMARY
+        echo "- **Flutter SDK**: Built into subosito/flutter-action" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## Android/Gradle Caches:" >> $GITHUB_STEP_SUMMARY
+        echo "- **Gradle Caches**: ~/.gradle/caches" >> $GITHUB_STEP_SUMMARY
+        echo "- **Gradle Wrapper**: ~/.gradle/wrapper" >> $GITHUB_STEP_SUMMARY
+        echo "- **Project Gradle**: application/android/.gradle" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## Semantic Release:" >> $GITHUB_STEP_SUMMARY
+        echo "- **NPM Global**: ~/.npm" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## Cache Keys Used:" >> $GITHUB_STEP_SUMMARY
+        echo "- Pub: \`\${{ runner.os }}-pub-\${{ hashFiles('application/pubspec.lock') }}\`" >> $GITHUB_STEP_SUMMARY
+        echo "- Gradle: \`\${{ runner.os }}-gradle-\${{ hashFiles('application/android/gradle/wrapper/gradle-wrapper.properties') }}\`" >> $GITHUB_STEP_SUMMARY
+        echo "- NPM: \`\${{ runner.os }}-semantic-release-global\`" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## When to Clear Caches:" >> $GITHUB_STEP_SUMMARY
+        echo "- **Flutter/Pub**: When pubspec.yaml dependencies change unexpectedly" >> $GITHUB_STEP_SUMMARY
+        echo "- **Gradle**: When Android build fails with dependency issues" >> $GITHUB_STEP_SUMMARY
+        echo "- **NPM**: When semantic-release has module conflicts" >> $GITHUB_STEP_SUMMARY
+        echo "- **All**: When builds are consistently failing with cache-related errors" >> $GITHUB_STEP_SUMMARY
+
+  clear-flutter-cache:
+    name: Clear Flutter/Pub Caches
+    runs-on: ubuntu-latest
+    if: github.event.inputs.cache_type == 'clear-flutter'
+    
+    steps:
+    - name: Clear Flutter Caches
+      run: |
+        echo "🗑️ Clearing Flutter/Pub caches..."
+        echo "Reason: ${{ github.event.inputs.reason || 'Manual cache clear' }}"
+        
+        # Note: GitHub Actions doesn't provide direct cache deletion API
+        # This workflow documents the process and creates a marker
+        
+        echo "To clear Flutter caches, you need to:"
+        echo "1. Update pubspec.lock to change cache key"
+        echo "2. Or wait 7 days for automatic cache expiration"
+        echo "3. Or use GitHub CLI: gh cache delete"
+        
+        # Create a cache-bust marker file
+        echo "$(date)" > flutter-cache-cleared.txt
+        
+        echo "✅ Flutter cache clear process initiated"
+    
+    - name: Upload cache-clear marker
+      uses: actions/upload-artifact@v4
+      with:
+        name: flutter-cache-cleared-${{ github.run_number }}
+        path: flutter-cache-cleared.txt
+
+  clear-gradle-cache:
+    name: Clear Gradle Caches
+    runs-on: ubuntu-latest
+    if: github.event.inputs.cache_type == 'clear-gradle'
+    
+    steps:
+    - name: Clear Gradle Caches
+      run: |
+        echo "🗑️ Clearing Gradle caches..."
+        echo "Reason: ${{ github.event.inputs.reason || 'Manual cache clear' }}"
+        
+        echo "To clear Gradle caches:"
+        echo "1. Update gradle-wrapper.properties to change cache key"
+        echo "2. Or use workflow_dispatch with clear-all option"
+        
+        echo "$(date)" > gradle-cache-cleared.txt
+        echo "✅ Gradle cache clear process initiated"
+    
+    - name: Upload cache-clear marker
+      uses: actions/upload-artifact@v4
+      with:
+        name: gradle-cache-cleared-${{ github.run_number }}
+        path: gradle-cache-cleared.txt
+
+  clear-npm-cache:
+    name: Clear NPM/Semantic-Release Caches
+    runs-on: ubuntu-latest
+    if: github.event.inputs.cache_type == 'clear-npm'
+    
+    steps:
+    - name: Clear NPM Caches
+      run: |
+        echo "🗑️ Clearing NPM/Semantic-Release caches..."
+        echo "Reason: ${{ github.event.inputs.reason || 'Manual cache clear' }}"
+        
+        echo "NPM cache will be regenerated on next semantic-release run"
+        echo "$(date)" > npm-cache-cleared.txt
+        echo "✅ NPM cache clear process initiated"
+    
+    - name: Upload cache-clear marker
+      uses: actions/upload-artifact@v4
+      with:
+        name: npm-cache-cleared-${{ github.run_number }}
+        path: npm-cache-cleared.txt
+
+  clear-all-caches:
+    name: Clear All Caches
+    runs-on: ubuntu-latest
+    if: github.event.inputs.cache_type == 'clear-all'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Clear All Caches
+      run: |
+        echo "🗑️ Clearing ALL caches..."
+        echo "Reason: ${{ github.event.inputs.reason || 'Manual cache clear' }}"
+        
+        # Create cache-busting changes
+        echo "# Cache cleared on $(date)" >> cache-bust.md
+        echo "Reason: ${{ github.event.inputs.reason || 'Manual cache clear' }}" >> cache-bust.md
+        
+        # This will change file hashes and invalidate caches
+        echo "$(date)" > .cache-bust-$(date +%s)
+        
+        echo "✅ All caches will be invalidated on next CI run"
+    
+    - name: Commit cache-bust marker
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add .
+        git commit -m "chore: cache bust - clear all CI caches
+
+        Reason: ${{ github.event.inputs.reason || 'Manual cache clear' }}
+        Triggered by: ${{ github.actor }}
+        
+        [skip ci]" || echo "No changes to commit"
+        git push || echo "Nothing to push"

@@ -180,7 +180,12 @@ jobs:
     
     steps:
     - uses: actions/checkout@v4
-    
+
+    - name: Setup Visual Studio Build Tools
+      uses: microsoft/setup-msbuild@v2
+      with:
+        msbuild-architecture: x64
+
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
@@ -202,7 +207,13 @@ jobs:
       run: flutter pub get
       working-directory: .\application
 
-    
+    - name: Enable Windows support and configure
+      run: |
+        flutter config --enable-windows-desktop
+        flutter create . --platforms windows
+      working-directory: .\application
+      shell: powershell
+
     - name: Build Windows app
       run: flutter build windows --release
       working-directory: .\application

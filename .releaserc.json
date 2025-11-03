@@ -8,12 +8,6 @@
     "@semantic-release/release-notes-generator",
     "@semantic-release/changelog",
     [
-      "@semantic-release/exec",
-      {
-        "prepareCmd": "cd application && flutter pub get && flutter build apk --release --split-per-abi && flutter build web --release && flutter build windows --release"
-      }
-    ],
-    [
       "@semantic-release/github",
       {
         "assets": [

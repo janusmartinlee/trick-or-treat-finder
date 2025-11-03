@@ -1,0 +1,17 @@
+# Node.js (for semantic-release)
+node_modules/
+package-lock.json
+*.log
+
+# Build outputs
+build/
+.dart_tool/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db

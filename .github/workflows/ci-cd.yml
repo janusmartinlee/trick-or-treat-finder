@@ -177,7 +177,6 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20'
-        cache: 'npm'
     
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
@@ -186,15 +185,15 @@ jobs:
         channel: 'stable'
         cache: true
     
-    - name: Cache semantic-release
+    - name: Cache semantic-release global packages
       uses: actions/cache@v4
       with:
         path: ~/.npm
-        key: ${{ runner.os }}-semantic-release-${{ hashFiles('package-lock.json') }}
+        key: ${{ runner.os }}-semantic-release-global
         restore-keys: |
           ${{ runner.os }}-semantic-release-
     
-    - name: Install semantic-release
+    - name: Install semantic-release globally
       run: |
         npm install -g semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github @semantic-release/exec
     
@@ -209,6 +208,13 @@ jobs:
       with:
         name: web-build
         path: application/build/web/
+    
+    - name: List downloaded artifacts (debug)
+      run: |
+        echo "Android APK artifacts:"
+        ls -la application/build/app/outputs/flutter-apk/ || echo "Android artifacts directory not found"
+        echo "Web artifacts:"
+        ls -la application/build/web/ || echo "Web artifacts directory not found"
     
     - name: Release
       run: semantic-release

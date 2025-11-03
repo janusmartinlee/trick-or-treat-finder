@@ -1,0 +1,151 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test-frontend:
+    name: Test Flutter Frontend
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.35.7'
+        channel: 'stable'
+    
+    - name: Install dependencies
+      run: flutter pub get
+      working-directory: ./application
+    
+    - name: Analyze code
+      run: flutter analyze
+      working-directory: ./application
+    
+    - name: Run tests
+      run: flutter test --concurrency=4
+      working-directory: ./application
+    
+    - name: Check formatting
+      run: dart format --output=none --set-exit-if-changed .
+      working-directory: ./application
+
+  build-android:
+    name: Build Android Frontend
+    needs: test-frontend
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.35.7'
+        channel: 'stable'
+    
+    - name: Install dependencies
+      run: flutter pub get
+      working-directory: ./application
+    
+    - name: Build Android APK
+      run: flutter build apk --release
+      working-directory: ./application
+    
+    - name: Upload Android artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: android-apk
+        path: application/build/app/outputs/flutter-apk/app-release.apk
+
+  build-web:
+    name: Build Web Frontend
+    needs: test-frontend
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.35.7'
+        channel: 'stable'
+    
+    - name: Install dependencies
+      run: flutter pub get
+      working-directory: ./application
+    
+    - name: Build Web
+      run: flutter build web --release
+      working-directory: ./application
+    
+    - name: Upload Web artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: web-build
+        path: application/build/web/
+
+  # Placeholder for backend tests when backend is added
+  test-backend:
+    name: Test Backend (Placeholder)
+    runs-on: ubuntu-latest
+    if: false  # Disabled until backend is implemented
+    
+    steps:
+    - uses: actions/checkout@v4
+    - name: Placeholder for backend tests
+      run: echo "Backend tests will be added here"
+
+  release:
+    name: Release
+    needs: [test-frontend, build-android, build-web]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.35.7'
+        channel: 'stable'
+    
+    - name: Install semantic-release
+      run: |
+        npm install -g semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github @semantic-release/exec
+    
+    - name: Download Android artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: android-apk
+        path: application/build/app/outputs/flutter-apk/
+    
+    - name: Download Web artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: web-build
+        path: application/build/web/
+    
+    - name: Release
+      run: semantic-release
+      working-directory: ./application
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

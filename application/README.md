@@ -1,6 +1,6 @@
 # Trick or Treat Finder
 
-A Flutter app that helps connect Halloween trick-or-treaters with homes offering treats.
+A Flutter app that helps connect Halloween trick-or-treaters with homes offering treats. Built with Clean Architecture, Danish internationalization, and a community-funded API model.
 
 ## Features
 
@@ -10,6 +10,7 @@ A Flutter app that helps connect Halloween trick-or-treaters with homes offering
 - **Safety Features**: Parental controls and safety measures
 - **Queue Management**: Handle popular locations efficiently
 - **Group Coordination**: Coordinate with friends and family
+- **Multilingual Support**: Danish and English localization
 
 ## Architecture
 

@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [ main, master ]
 
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  packages: write
+
 jobs:
   test-frontend:
     name: Test Flutter Frontend
@@ -271,7 +277,14 @@ jobs:
         echo "Windows artifacts:"
         ls -la *.zip || echo "Windows zip file not found"
     
+    - name: Configure Git
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git config --get remote.origin.url
+        git status
+    
     - name: Release
-      run: semantic-release
+      run: semantic-release --debug
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

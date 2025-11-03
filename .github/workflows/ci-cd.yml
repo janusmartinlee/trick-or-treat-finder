@@ -175,16 +175,11 @@ jobs:
   build-windows:
     name: Build Windows Frontend
     needs: test-frontend
-    runs-on: windows-latest
+    runs-on: windows-2022
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     
     steps:
     - uses: actions/checkout@v4
-
-    - name: Setup Visual Studio Build Tools
-      uses: microsoft/setup-msbuild@v2
-      with:
-        msbuild-architecture: x64
 
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
@@ -192,7 +187,7 @@ jobs:
         flutter-version: '3.35.7'
         channel: 'stable'
         cache: true
-    
+
     - name: Cache pub dependencies
       uses: actions/cache@v4
       with:
@@ -202,23 +197,14 @@ jobs:
         key: ${{ runner.os }}-pub-v2-${{ hashFiles('application/pubspec.lock', 'application/pubspec.yaml') }}
         restore-keys: |
           ${{ runner.os }}-pub-
-    
+
     - name: Install dependencies
       run: flutter pub get
       working-directory: .\application
 
-    - name: Enable Windows support and configure
-      run: |
-        flutter config --enable-windows-desktop
-        flutter create . --platforms windows
-      working-directory: .\application
-      shell: powershell
-
     - name: Build Windows app
-      run: flutter build windows --release
-      working-directory: .\application
-    
-    - name: Create Windows distribution package
+      run: flutter build windows --release --verbose
+      working-directory: .\application    - name: Create Windows distribution package
       run: |
         New-Item -ItemType Directory -Force -Path "windows-distribution"
         Copy-Item -Recurse -Path "application\build\windows\x64\runner\Release\*" -Destination "windows-distribution\"

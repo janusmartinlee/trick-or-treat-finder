@@ -5,16 +5,10 @@ class UserPreferences {
   final ThemeMode themeMode;
   final Locale locale;
 
-  const UserPreferences({
-    required this.themeMode,
-    required this.locale,
-  });
+  const UserPreferences({required this.themeMode, required this.locale});
 
   /// Create a copy with modified values
-  UserPreferences copyWith({
-    ThemeMode? themeMode,
-    Locale? locale,
-  }) {
+  UserPreferences copyWith({ThemeMode? themeMode, Locale? locale}) {
     return UserPreferences(
       themeMode: themeMode ?? this.themeMode,
       locale: locale ?? this.locale,

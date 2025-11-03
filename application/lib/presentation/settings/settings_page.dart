@@ -11,8 +11,9 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SettingsBloc(serviceLocator<PreferencesUseCase>())
-        ..add(LoadSettings()),
+      create: (context) =>
+          SettingsBloc(serviceLocator<PreferencesUseCase>())
+            ..add(LoadSettings()),
       child: const SettingsView(),
     );
   }
@@ -24,17 +25,13 @@ class SettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(localizations.settings),
-      ),
+      appBar: AppBar(title: Text(localizations.settings)),
       body: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, state) {
           if (state is SettingsLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (state is SettingsError) {
@@ -89,7 +86,7 @@ class SettingsView extends StatelessWidget {
 
   Widget _buildThemeSection(BuildContext context, SettingsLoaded state) {
     final localizations = AppLocalizations.of(context)!;
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -161,11 +158,7 @@ class SettingsView extends StatelessWidget {
         },
       ),
       title: Row(
-        children: [
-          Icon(icon, size: 20),
-          const SizedBox(width: 8),
-          Text(title),
-        ],
+        children: [Icon(icon, size: 20), const SizedBox(width: 8), Text(title)],
       ),
       subtitle: Text(subtitle),
       onTap: () {
@@ -176,7 +169,7 @@ class SettingsView extends StatelessWidget {
 
   Widget _buildLanguageSection(BuildContext context, SettingsLoaded state) {
     final localizations = AppLocalizations.of(context)!;
-    
+
     const supportedLocales = [
       Locale('en', 'US'),
       Locale('da', 'DK'),
@@ -205,12 +198,14 @@ class SettingsView extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            ...supportedLocales.map((locale) => _buildLanguageOption(
-                  context,
-                  _getLanguageName(locale),
-                  locale,
-                  state.preferences.locale,
-                )),
+            ...supportedLocales.map(
+              (locale) => _buildLanguageOption(
+                context,
+                _getLanguageName(locale),
+                locale,
+                state.preferences.locale,
+              ),
+            ),
           ],
         ),
       ),
@@ -237,15 +232,14 @@ class SettingsView extends StatelessWidget {
       ),
       title: Row(
         children: [
-          Text(
-            _getFlagEmoji(locale),
-            style: const TextStyle(fontSize: 20),
-          ),
+          Text(_getFlagEmoji(locale), style: const TextStyle(fontSize: 20)),
           const SizedBox(width: 12),
           Text(title),
         ],
       ),
-      subtitle: Text('${locale.languageCode.toUpperCase()} - ${locale.countryCode}'),
+      subtitle: Text(
+        '${locale.languageCode.toUpperCase()} - ${locale.countryCode}',
+      ),
       onTap: () {
         context.read<SettingsBloc>().add(UpdateLocale(locale));
       },

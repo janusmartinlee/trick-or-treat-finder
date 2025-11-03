@@ -4,11 +4,7 @@ abstract class AppException implements Exception {
   final String? code;
   final dynamic originalException;
 
-  const AppException(
-    this.message, {
-    this.code,
-    this.originalException,
-  });
+  const AppException(this.message, {this.code, this.originalException});
 
   @override
   String toString() => 'AppException: $message';
@@ -16,11 +12,7 @@ abstract class AppException implements Exception {
 
 /// Domain-specific exceptions
 class DomainException extends AppException {
-  const DomainException(
-    super.message, {
-    super.code,
-    super.originalException,
-  });
+  const DomainException(super.message, {super.code, super.originalException});
 }
 
 /// Infrastructure-specific exceptions
@@ -34,18 +26,10 @@ class InfrastructureException extends AppException {
 
 /// Network-related exceptions
 class NetworkException extends InfrastructureException {
-  const NetworkException(
-    super.message, {
-    super.code,
-    super.originalException,
-  });
+  const NetworkException(super.message, {super.code, super.originalException});
 }
 
 /// Cache-related exceptions
 class CacheException extends InfrastructureException {
-  const CacheException(
-    super.message, {
-    super.code,
-    super.originalException,
-  });
+  const CacheException(super.message, {super.code, super.originalException});
 }

@@ -5,7 +5,7 @@ import 'package:logger/logger.dart';
 class TelemetryService {
   static TelemetryService? _instance;
   static TelemetryService get instance => _instance ??= TelemetryService._();
-  
+
   late final Logger _logger;
 
   TelemetryService._() {
@@ -76,7 +76,12 @@ class TelemetryService {
   }
 
   /// Log a message with telemetry context
-  void log(Level level, String message, {dynamic error, StackTrace? stackTrace}) {
+  void log(
+    Level level,
+    String message, {
+    dynamic error,
+    StackTrace? stackTrace,
+  }) {
     _logger.log(level, message, error: error, stackTrace: stackTrace);
   }
 
@@ -90,17 +95,21 @@ class TelemetryService {
 class TelemetrySpan {
   final String name;
   final Logger _logger;
-  
+
   TelemetrySpan(this.name, this._logger);
-  
+
   void setStatus(String status, {String? description}) {
     _logger.d('Span $name status: $status ${description ?? ''}');
   }
-  
+
   void recordException(dynamic error, {StackTrace? stackTrace}) {
-    _logger.e('Span $name exception: $error', error: error, stackTrace: stackTrace);
+    _logger.e(
+      'Span $name exception: $error',
+      error: error,
+      stackTrace: stackTrace,
+    );
   }
-  
+
   void end() {
     _logger.d('Span $name ended');
   }

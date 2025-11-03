@@ -6,7 +6,8 @@ import '../../domain/repositories/preferences_repository.dart';
 /// TODO: Replace with persistent storage (SharedPreferences, Hive, etc.)
 class InMemoryPreferencesRepository implements PreferencesRepository {
   UserPreferences _preferences = UserPreferences.defaultPreferences;
-  final StreamController<UserPreferences> _controller = StreamController<UserPreferences>.broadcast();
+  final StreamController<UserPreferences> _controller =
+      StreamController<UserPreferences>.broadcast();
 
   @override
   Future<UserPreferences> getPreferences() async {

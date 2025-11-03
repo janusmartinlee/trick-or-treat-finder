@@ -10,10 +10,10 @@ import 'l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize dependencies
   await initializeDependencies();
-  
+
   runApp(const TrickOrTreatApp());
 }
 
@@ -23,8 +23,8 @@ class TrickOrTreatApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AppBloc(serviceLocator<PreferencesUseCase>())
-        ..add(AppStarted()),
+      create: (context) =>
+          AppBloc(serviceLocator<PreferencesUseCase>())..add(AppStarted()),
       child: BlocBuilder<AppBloc, AppState>(
         builder: (context, state) {
           if (state is AppReady) {
@@ -40,14 +40,11 @@ class TrickOrTreatApp extends StatelessWidget {
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
               ],
-              supportedLocales: const [
-                Locale('en', 'US'),
-                Locale('da', 'DK'),
-              ],
+              supportedLocales: const [Locale('en', 'US'), Locale('da', 'DK')],
               home: const HomePage(),
             );
           }
-          
+
           // Loading state
           return MaterialApp(
             title: 'Trick or Treat Finder',
@@ -60,14 +57,9 @@ class TrickOrTreatApp extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            supportedLocales: const [
-              Locale('en', 'US'),
-              Locale('da', 'DK'),
-            ],
+            supportedLocales: const [Locale('en', 'US'), Locale('da', 'DK')],
             home: const Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
+              body: Center(child: CircularProgressIndicator()),
             ),
           );
         },
@@ -82,7 +74,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    
+
     return Scaffold(
       appBar: AppBar(
         title: Text(localizations.appTitle),
@@ -91,9 +83,7 @@ class HomePage extends StatelessWidget {
             icon: const Icon(Icons.settings),
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const SettingsPage(),
-                ),
+                MaterialPageRoute(builder: (context) => const SettingsPage()),
               );
             },
             tooltip: localizations.settings,
@@ -104,26 +94,16 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.location_on,
-              size: 80,
-              color: Colors.orange,
-            ),
+            const Icon(Icons.location_on, size: 80, color: Colors.orange),
             const SizedBox(height: 24),
             Text(
               localizations.welcomeMessage,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             Text(
               localizations.welcomeSubtitle,
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
               textAlign: TextAlign.center,
             ),
           ],

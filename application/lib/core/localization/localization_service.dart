@@ -27,23 +27,29 @@ class LocalizationService {
     // Check if the current device locale is supported
     if (locales != null) {
       for (final locale in locales) {
-        if (supportedLocales.any((supportedLocale) =>
-            supportedLocale.languageCode == locale.languageCode &&
-            supportedLocale.countryCode == locale.countryCode)) {
+        if (supportedLocales.any(
+          (supportedLocale) =>
+              supportedLocale.languageCode == locale.languageCode &&
+              supportedLocale.countryCode == locale.countryCode,
+        )) {
           return locale;
         }
       }
-      
+
       // If no exact match, try to find a match by language code only
       for (final locale in locales) {
-        if (supportedLocales.any((supportedLocale) =>
-            supportedLocale.languageCode == locale.languageCode)) {
-          return supportedLocales.firstWhere((supportedLocale) =>
-              supportedLocale.languageCode == locale.languageCode);
+        if (supportedLocales.any(
+          (supportedLocale) =>
+              supportedLocale.languageCode == locale.languageCode,
+        )) {
+          return supportedLocales.firstWhere(
+            (supportedLocale) =>
+                supportedLocale.languageCode == locale.languageCode,
+          );
         }
       }
     }
-    
+
     // Return the first supported locale as fallback
     return supportedLocales.first;
   }

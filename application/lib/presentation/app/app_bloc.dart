@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/user_preferences.dart';
 import '../../application/use_cases/preferences_use_case.dart';
@@ -25,15 +26,26 @@ class AppReady extends AppState {
 /// App BLoC to manage global app state including theme and locale
 class AppBloc extends Bloc<AppEvent, AppState> {
   final PreferencesUseCase _preferencesUseCase;
+  late final StreamSubscription _preferencesSubscription;
 
   AppBloc(this._preferencesUseCase) : super(AppInitial()) {
     on<AppStarted>(_onAppStarted);
     on<PreferencesChanged>(_onPreferencesChanged);
-    
+
     // Listen to preferences changes
-    _preferencesUseCase.preferencesStream.listen((preferences) {
-      add(PreferencesChanged(preferences));
+    _preferencesSubscription = _preferencesUseCase.preferencesStream.listen((
+      preferences,
+    ) {
+      if (!isClosed) {
+        add(PreferencesChanged(preferences));
+      }
     });
+  }
+
+  @override
+  Future<void> close() {
+    _preferencesSubscription.cancel();
+    return super.close();
   }
 
   Future<void> _onAppStarted(AppStarted event, Emitter<AppState> emit) async {
@@ -46,7 +58,10 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     }
   }
 
-  Future<void> _onPreferencesChanged(PreferencesChanged event, Emitter<AppState> emit) async {
+  Future<void> _onPreferencesChanged(
+    PreferencesChanged event,
+    Emitter<AppState> emit,
+  ) async {
     emit(AppReady(event.preferences));
   }
 }

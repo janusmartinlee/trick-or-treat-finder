@@ -45,7 +45,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     on<UpdateLocale>(_onUpdateLocale);
   }
 
-  Future<void> _onLoadSettings(LoadSettings event, Emitter<SettingsState> emit) async {
+  Future<void> _onLoadSettings(
+    LoadSettings event,
+    Emitter<SettingsState> emit,
+  ) async {
     emit(SettingsLoading());
     try {
       final preferences = await _preferencesUseCase.getPreferences();
@@ -55,7 +58,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     }
   }
 
-  Future<void> _onUpdateThemeMode(UpdateThemeMode event, Emitter<SettingsState> emit) async {
+  Future<void> _onUpdateThemeMode(
+    UpdateThemeMode event,
+    Emitter<SettingsState> emit,
+  ) async {
     try {
       await _preferencesUseCase.updateThemeMode(event.themeMode);
       final preferences = await _preferencesUseCase.getPreferences();
@@ -65,7 +71,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     }
   }
 
-  Future<void> _onUpdateLocale(UpdateLocale event, Emitter<SettingsState> emit) async {
+  Future<void> _onUpdateLocale(
+    UpdateLocale event,
+    Emitter<SettingsState> emit,
+  ) async {
     try {
       await _preferencesUseCase.updateLocale(event.locale);
       final preferences = await _preferencesUseCase.getPreferences();

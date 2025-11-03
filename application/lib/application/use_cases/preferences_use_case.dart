@@ -16,7 +16,9 @@ class PreferencesUseCase {
   /// Update theme mode
   Future<void> updateThemeMode(ThemeMode themeMode) async {
     final currentPreferences = await _repository.getPreferences();
-    final updatedPreferences = currentPreferences.copyWith(themeMode: themeMode);
+    final updatedPreferences = currentPreferences.copyWith(
+      themeMode: themeMode,
+    );
     await _repository.savePreferences(updatedPreferences);
   }
 
@@ -33,5 +35,6 @@ class PreferencesUseCase {
   }
 
   /// Stream of preference changes
-  Stream<UserPreferences> get preferencesStream => _repository.preferencesStream;
+  Stream<UserPreferences> get preferencesStream =>
+      _repository.preferencesStream;
 }

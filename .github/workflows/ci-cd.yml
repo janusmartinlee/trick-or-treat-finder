@@ -150,6 +150,53 @@ jobs:
         name: web-build
         path: application/build/web/
 
+  build-windows:
+    name: Build Windows Frontend
+    needs: test-frontend
+    runs-on: windows-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.35.7'
+        channel: 'stable'
+        cache: true
+    
+    - name: Cache pub dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~\AppData\Local\Pub\Cache
+          application\.dart_tool
+        key: ${{ runner.os }}-pub-${{ hashFiles('application/pubspec.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-pub-
+    
+    - name: Install dependencies
+      run: flutter pub get
+      working-directory: .\application
+    
+    - name: Build Windows app
+      run: flutter build windows --release
+      working-directory: .\application
+    
+    - name: Create Windows distribution package
+      run: |
+        New-Item -ItemType Directory -Force -Path "windows-distribution"
+        Copy-Item -Recurse -Path "application\build\windows\x64\runner\Release\*" -Destination "windows-distribution\"
+        Compress-Archive -Path "windows-distribution\*" -DestinationPath "TrickOrTreatFinder-Windows.zip"
+      shell: powershell
+    
+    - name: Upload Windows artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: windows-app
+        path: TrickOrTreatFinder-Windows.zip
+
   # Placeholder for backend tests when backend is added
   test-backend:
     name: Test Backend (Placeholder)
@@ -163,7 +210,7 @@ jobs:
 
   release:
     name: Release
-    needs: [test-frontend, build-android, build-web]
+    needs: [test-frontend, build-android, build-web, build-windows]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     
@@ -209,12 +256,20 @@ jobs:
         name: web-build
         path: application/build/web/
     
+    - name: Download Windows artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: windows-app
+        path: ./
+    
     - name: List downloaded artifacts (debug)
       run: |
         echo "Android APK artifacts:"
         ls -la application/build/app/outputs/flutter-apk/ || echo "Android artifacts directory not found"
         echo "Web artifacts:"
         ls -la application/build/web/ || echo "Web artifacts directory not found"
+        echo "Windows artifacts:"
+        ls -la *.zip || echo "Windows zip file not found"
     
     - name: Release
       run: semantic-release

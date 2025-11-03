@@ -10,7 +10,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "cd application && flutter pub get && flutter build apk --release --split-per-abi && flutter build web --release"
+        "prepareCmd": "cd application && flutter pub get && flutter build apk --release --split-per-abi && flutter build web --release && flutter build windows --release"
       }
     ],
     [
@@ -28,6 +28,10 @@
           {
             "path": "application/build/app/outputs/flutter-apk/app-x86_64-release.apk",
             "label": "Android APK (x86 64-bit)"
+          },
+          {
+            "path": "TrickOrTreatFinder-Windows.zip",
+            "label": "Windows Application (ZIP)"
           },
           {
             "path": "application/build/web/**",

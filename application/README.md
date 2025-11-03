@@ -2,15 +2,30 @@
 
 A Flutter app that helps connect Halloween trick-or-treaters with homes offering treats. Built with Clean Architecture, Danish internationalization, and a community-funded API model.
 
-## Features
+## Overview
 
-- **Location Registration**: Homes can register as treat-giving locations
-- **Real-time Status**: Open/Closed/OutOfCandy status updates
-- **Route Planning**: Help trick-or-treaters plan efficient routes
-- **Safety Features**: Parental controls and safety measures
-- **Queue Management**: Handle popular locations efficiently
-- **Group Coordination**: Coordinate with friends and family
-- **Multilingual Support**: Danish and English localization
+Trick or Treat Finder bridges the gap between Halloween trick-or-treaters and treat-giving homes, creating a safer and more efficient Halloween experience for everyone in the community.
+
+**For Trick-or-Treaters:**
+- Find active treat locations on an interactive map
+- Plan optimal routes and get real-time status updates
+- Coordinate with friends and family groups
+- Access safety features and parental controls
+
+**For Treat Givers:**
+- Register your location and manage availability status
+- Handle crowds with queue management tools
+- Connect with your local Halloween community
+- Provide a better experience for visiting families
+
+## Key Features
+
+- **Interactive Map**: Real-time location status and filtering
+- **Smart Routing**: Optimized paths with safety considerations  
+- **Group Coordination**: Plan and coordinate with friends and family
+- **Safety First**: Comprehensive parental controls and emergency features
+- **Community Funded**: Transparent, community-supported sustainability model
+- **Multilingual**: Full Danish and English localization
 
 ## Architecture
 
@@ -30,55 +45,28 @@ This project follows Clean Architecture principles with:
 - Dart SDK
 - VS Code with Flutter/Dart extensions
 
-### Installation
+### Quick Start
 
-1. Clone the repository
-
-2. Install dependencies:
-
-   ```bash
-   flutter pub get
-   ```
-
-3. Run the app:
-
-   ```bash
-   flutter run
-   ```
+```bash
+flutter pub get
+flutter run
+```
 
 ### Development
 
-- Use VS Code tasks for building and running
-- Follow Clean Architecture guidelines
-- Implement proper error handling and logging
-- Write tests for core features
+- Use VS Code tasks for building and testing
+- Follow Clean Architecture patterns
+- Write tests for all business logic
+- Check GitHub Issues for development roadmap
 
-## Dependencies
+## Project Details
 
-- **flutter_bloc**: State management
-- **get_it**: Dependency injection
-- **logger**: Logging functionality
-- **opentelemetry**: Distributed tracing (simplified implementation)
-- **flutter_localizations**: Official Flutter internationalization
-- **intl**: Internationalization utilities
+**Dependencies**: flutter_bloc, get_it, logger, opentelemetry, flutter_localizations, intl
 
-## Testing Philosophy
+**Testing**: BDD-style feature tests with interfaces and test doubles (no mocking frameworks)
 
-This project uses **interfaces and test doubles** instead of mocking frameworks:
+**Contributing**: Follow established architecture patterns and ensure all tests pass
 
-- Define clear interfaces for all external dependencies
-- Create test double implementations for testing
-- Use dependency injection to swap implementations
-- Write BDD-style tests using regular Flutter test framework
+---
 
-## Testing
-
-Run tests with:
-
-```bash
-flutter test
-```
-
-## Contributing
-
-Follow the established architecture patterns and ensure all tests pass before submitting changes.
+For detailed feature specifications and development roadmap, see [GitHub Issues](https://github.com/janusmartinlee/trick-or-treat-finder/issues).

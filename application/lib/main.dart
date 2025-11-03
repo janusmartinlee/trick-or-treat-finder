@@ -14,6 +14,7 @@ void main() async {
   // Initialize dependencies
   await initializeDependencies();
 
+  // Start the application
   runApp(const TrickOrTreatApp());
 }
 

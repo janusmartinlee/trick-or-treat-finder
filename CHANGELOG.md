@@ -1,3 +1,11 @@
+## [1.0.1](https://github.com/janusmartinlee/trick-or-treat-finder/compare/v1.0.0...v1.0.1) (2025-11-04)
+
+
+### Bug Fixes
+
+* remove BOM from semantic-release config to resolve JSON parsing error ([04b5f84](https://github.com/janusmartinlee/trick-or-treat-finder/commit/04b5f84ead1f9645e6d2b0eec30dd2f00a5a6929))
+* update semantic-release config for published releases without Windows ([fecc84f](https://github.com/janusmartinlee/trick-or-treat-finder/commit/fecc84f895421d291ca66a06fa56f918ddd470ca))
+
 # 1.0.0 (2025-11-04)
 
 

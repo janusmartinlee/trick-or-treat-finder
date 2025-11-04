@@ -187,26 +187,30 @@ jobs:
         flutter-version: '3.35.7'
         channel: 'stable'
         cache: true
-    
-    - name: Cache pub dependencies
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~\AppData\Local\Pub\Cache
-          application\.dart_tool
-        key: ${{ runner.os }}-pub-${{ hashFiles('application/pubspec.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-pub-
-    
+
+    # Temporarily disable cache to rule out cache corruption
+    # - name: Cache pub dependencies
+    #   uses: actions/cache@v4
+    #   with:
+    #     path: |
+    #       ~\AppData\Local\Pub\Cache
+    #       application\.dart_tool
+    #     key: ${{ runner.os }}-pub-${{ hashFiles('application/pubspec.lock') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-pub-
+
     - name: Install dependencies
       run: flutter pub get
+      working-directory: .\application    - name: Clean and regenerate Windows build
+      run: |
+        flutter clean
+        flutter pub get
+        flutter config --enable-windows-desktop
       working-directory: .\application
-    
+
     - name: Build Windows app
       run: flutter build windows --release
-      working-directory: .\application
-    
-    - name: Create Windows distribution package
+      working-directory: .\application    - name: Create Windows distribution package
       run: |
         New-Item -ItemType Directory -Force -Path "windows-distribution"
         Copy-Item -Recurse -Path "application\build\windows\x64\runner\Release\*" -Destination "windows-distribution\"

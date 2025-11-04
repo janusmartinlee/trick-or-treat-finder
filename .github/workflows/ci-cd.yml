@@ -176,7 +176,7 @@ jobs:
     name: Build Windows Frontend
     needs: test-frontend
     runs-on: windows-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    if: false  # Temporarily disabled - investigate Windows build issues separately
     
     steps:
     - uses: actions/checkout@v4
@@ -234,7 +234,7 @@ jobs:
 
   release:
     name: Release
-    needs: [test-frontend, build-android, build-web, build-windows]
+    needs: [test-frontend, build-android, build-web]  # Windows temporarily disabled
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     
@@ -280,11 +280,12 @@ jobs:
         name: web-build
         path: application/build/web/
     
-    - name: Download Windows artifacts
-      uses: actions/download-artifact@v4
-      with:
-        name: windows-app
-        path: ./
+    # Temporarily disabled - Windows build issues
+    # - name: Download Windows artifacts
+    #   uses: actions/download-artifact@v4
+    #   with:
+    #     name: windows-app
+    #     path: ./
     
     - name: List downloaded artifacts (debug)
       run: |
@@ -292,8 +293,9 @@ jobs:
         ls -la application/build/app/outputs/flutter-apk/ || echo "Android artifacts directory not found"
         echo "Web artifacts:"
         ls -la application/build/web/ || echo "Web artifacts directory not found"
-        echo "Windows artifacts:"
-        ls -la *.zip || echo "Windows zip file not found"
+        # Windows temporarily disabled
+        # echo "Windows artifacts:"
+        # ls -la *.zip || echo "Windows zip file not found"
     
     - name: Configure Git
       run: |

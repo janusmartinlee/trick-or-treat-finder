@@ -180,48 +180,32 @@ jobs:
     
     steps:
     - uses: actions/checkout@v4
-
-    - name: Setup Visual Studio components
-      uses: microsoft/setup-msbuild@v2
-      with:
-        msbuild-architecture: x64
-
+    
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
         flutter-version: '3.35.7'
         channel: 'stable'
         cache: true
-
+    
     - name: Cache pub dependencies
       uses: actions/cache@v4
       with:
         path: |
           ~\AppData\Local\Pub\Cache
           application\.dart_tool
-        key: ${{ runner.os }}-pub-v2-${{ hashFiles('application/pubspec.lock', 'application/pubspec.yaml') }}
+        key: ${{ runner.os }}-pub-${{ hashFiles('application/pubspec.lock') }}
         restore-keys: |
           ${{ runner.os }}-pub-
-
+    
     - name: Install dependencies
       run: flutter pub get
       working-directory: .\application
-
-    - name: Enable Windows platform
-      run: |
-        flutter config --enable-windows-desktop
-        flutter create . --platforms windows
-      working-directory: .\application
-      shell: powershell
-
-    - name: Check Flutter doctor
-      run: flutter doctor -v
-      working-directory: .\application
-
+    
     - name: Build Windows app
-      run: flutter build windows --release --verbose
+      run: flutter build windows --release
       working-directory: .\application
-
+    
     - name: Create Windows distribution package
       run: |
         New-Item -ItemType Directory -Force -Path "windows-distribution"
@@ -233,9 +217,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: windows-app
-        path: TrickOrTreatFinder-Windows.zip
-
-  # Placeholder for backend tests when backend is added
+        path: TrickOrTreatFinder-Windows.zip  # Placeholder for backend tests when backend is added
   test-backend:
     name: Test Backend (Placeholder)
     runs-on: ubuntu-latest

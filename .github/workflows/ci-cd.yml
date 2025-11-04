@@ -175,11 +175,16 @@ jobs:
   build-windows:
     name: Build Windows Frontend
     needs: test-frontend
-    runs-on: windows-2022
+    runs-on: windows-latest
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     
     steps:
     - uses: actions/checkout@v4
+
+    - name: Setup Visual Studio components
+      uses: microsoft/setup-msbuild@v2
+      with:
+        msbuild-architecture: x64
 
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
@@ -200,6 +205,17 @@ jobs:
 
     - name: Install dependencies
       run: flutter pub get
+      working-directory: .\application
+
+    - name: Enable Windows platform
+      run: |
+        flutter config --enable-windows-desktop
+        flutter create . --platforms windows
+      working-directory: .\application
+      shell: powershell
+
+    - name: Check Flutter doctor
+      run: flutter doctor -v
       working-directory: .\application
 
     - name: Build Windows app

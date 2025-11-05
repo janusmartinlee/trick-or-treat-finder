@@ -7,12 +7,14 @@ A Flutter app that helps connect Halloween trick-or-treaters with homes offering
 Trick or Treat Finder bridges the gap between Halloween trick-or-treaters and treat-giving homes, creating a safer and more efficient Halloween experience for everyone in the community.
 
 **For Trick-or-Treaters:**
+
 - Find active treat locations on an interactive map
 - Plan optimal routes and get real-time status updates
 - Coordinate with friends and family groups
 - Access safety features and parental controls
 
 **For Treat Givers:**
+
 - Register your location and manage availability status
 - Handle crowds with queue management tools
 - Connect with your local Halloween community

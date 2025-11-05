@@ -2,6 +2,8 @@ import 'package:get_it/get_it.dart';
 import 'telemetry/telemetry_service.dart';
 import '../features/preferences/domain/preferences_repository.dart';
 import '../features/preferences/infrastructure/in_memory_preferences_repository.dart';
+import '../features/auth/domain/auth_repository.dart';
+import '../features/auth/infrastructure/in_memory_auth_repository.dart';
 
 /// Service locator for dependency injection
 /// 
@@ -35,6 +37,20 @@ Future<void> initializeDependencies() async {
     () => InMemoryPreferencesRepository(),
     // To swap to persistent storage, simply change the adapter:
     // () async => await SharedPreferencesAdapter.create(),
+  );
+
+  // Auth feature - Infrastructure layer only (Ports & Adapters pattern)
+  // 
+  // Port: AuthRepository interface (defined in domain)
+  // Adapter: Choose implementation (infrastructure):
+  //   - InMemoryAuthRepository (development/testing with fake users)
+  //   - FirebaseAuthAdapter (production OAuth - when implemented)
+  // 
+  // Application logic uses the port through Riverpod providers.
+  serviceLocator.registerLazySingleton<AuthRepository>(
+    () => InMemoryAuthRepository(),
+    // To swap to Firebase auth:
+    // () => FirebaseAuthAdapter(),
   );
 }
 

@@ -45,6 +45,9 @@ dependencies:
   # Dependency injection (minimal usage for infrastructure)
   get_it: ^7.7.0
   
+  # Persistent storage (adapter for ports)
+  shared_preferences: ^2.3.4
+  
   # Logging
   logger: ^2.4.0
   flutter_localizations:

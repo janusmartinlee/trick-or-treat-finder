@@ -22,10 +22,19 @@ Future<void> initializeDependencies() async {
     () => TelemetryService.instance,
   );
 
-  // Preferences feature - Infrastructure layer only
-  // Application logic is now handled by Riverpod providers
+  // Preferences feature - Infrastructure layer only (Ports & Adapters pattern)
+  // 
+  // Port: PreferencesRepository interface (defined in domain)
+  // Adapter: Choose implementation (infrastructure):
+  //   - InMemoryPreferencesRepository (development/testing)
+  //   - SharedPreferencesAdapter (persistent storage)
+  // 
+  // Application logic is handled by Riverpod providers that use the port,
+  // never knowing which adapter is being used.
   serviceLocator.registerLazySingleton<PreferencesRepository>(
     () => InMemoryPreferencesRepository(),
+    // To swap to persistent storage, simply change the adapter:
+    // () async => await SharedPreferencesAdapter.create(),
   );
 }
 

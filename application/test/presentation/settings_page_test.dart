@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trick_or_treat_finder/main.dart';
 import 'package:trick_or_treat_finder/core/dependency_injection.dart';
 
@@ -15,18 +16,23 @@ import 'package:trick_or_treat_finder/core/dependency_injection.dart';
 /// 
 /// Follows Clean Architecture:
 /// - Tests interact through UI layer (SettingsPage)
-/// - State managed by SettingsBloc
-/// - Data flows through PreferencesUseCase to repository
+/// - State managed by Riverpod providers
+/// - Data flows through preferences providers to repository
 void main() {
   setUpAll(() async {
     // Initialize dependencies once for all tests
     await initializeDependencies();
   });
 
+  /// Helper to wrap app in ProviderScope for tests
+  Widget createTestApp() {
+    return const ProviderScope(child: TrickOrTreatApp());
+  }
+
   group('SettingsPage Widget Tests', () {
     testWidgets('displays settings page title and sections', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(const TrickOrTreatApp());
+      await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
       // Navigate to settings
@@ -42,7 +48,7 @@ void main() {
     testWidgets('displays theme options: Light, Dark, System Default',
         (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(const TrickOrTreatApp());
+      await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
       await tester.tap(find.byIcon(Icons.settings));
@@ -56,7 +62,7 @@ void main() {
 
     testWidgets('displays language options: English, Dansk', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(const TrickOrTreatApp());
+      await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
       await tester.tap(find.byIcon(Icons.settings));
@@ -69,7 +75,7 @@ void main() {
 
     testWidgets('selects Light theme when Light option tapped', (tester) async {
       // Arrange
-      await tester.pumpWidget(const TrickOrTreatApp());
+      await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
       await tester.tap(find.byIcon(Icons.settings));
@@ -101,7 +107,7 @@ void main() {
 
     testWidgets('selects Dark theme when Dark option tapped', (tester) async {
       // Arrange
-      await tester.pumpWidget(const TrickOrTreatApp());
+      await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
       await tester.tap(find.byIcon(Icons.settings));
@@ -133,7 +139,7 @@ void main() {
     testWidgets('selects System Default theme when System Default option tapped',
         (tester) async {
       // Arrange
-      await tester.pumpWidget(const TrickOrTreatApp());
+      await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
       await tester.tap(find.byIcon(Icons.settings));
@@ -173,7 +179,7 @@ void main() {
     testWidgets('selects English language when English option tapped',
         (tester) async {
       // Arrange
-      await tester.pumpWidget(const TrickOrTreatApp());
+      await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
       await tester.tap(find.byIcon(Icons.settings));
@@ -205,7 +211,7 @@ void main() {
     testWidgets('selects Dansk language when Dansk option tapped',
         (tester) async {
       // Arrange
-      await tester.pumpWidget(const TrickOrTreatApp());
+      await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
       await tester.tap(find.byIcon(Icons.settings));
@@ -237,7 +243,7 @@ void main() {
     testWidgets('theme selection persists when navigating away and back',
         (tester) async {
       // Arrange
-      await tester.pumpWidget(const TrickOrTreatApp());
+      await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
       await tester.tap(find.byIcon(Icons.settings));
@@ -271,7 +277,7 @@ void main() {
     testWidgets('language selection persists when navigating away and back',
         (tester) async {
       // Arrange
-      await tester.pumpWidget(const TrickOrTreatApp());
+      await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
       await tester.tap(find.byIcon(Icons.settings));
@@ -309,7 +315,7 @@ void main() {
       // mock the repository to introduce a delay.
 
       // Arrange & Act
-      await tester.pumpWidget(const TrickOrTreatApp());
+      await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
       await tester.tap(find.byIcon(Icons.settings));

@@ -1,18 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
-import 'package:trick_or_treat_finder/domain/entities/user_preferences.dart';
-import 'package:trick_or_treat_finder/domain/repositories/preferences_repository.dart';
-import 'package:trick_or_treat_finder/infrastructure/repositories/in_memory_preferences_repository.dart';
-import 'package:trick_or_treat_finder/application/use_cases/preferences_use_case.dart';
+import 'package:trick_or_treat_finder/features/preferences/domain/user_preferences.dart';
+import 'package:trick_or_treat_finder/features/preferences/domain/preferences_repository.dart';
+import 'package:trick_or_treat_finder/features/preferences/infrastructure/in_memory_preferences_repository.dart';
 
 void main() {
   group('Feature: User preferences management', () {
     late PreferencesRepository repository;
-    late PreferencesUseCase useCase;
 
     setUp(() {
       repository = InMemoryPreferencesRepository();
-      useCase = PreferencesUseCase(repository);
     });
 
     group('Scenario: User changes theme preference', () {
@@ -20,14 +17,15 @@ void main() {
         'Given default preferences, When user changes to dark theme, Then preferences are updated',
         () async {
           // Given - default preferences
-          final initialPreferences = await useCase.getPreferences();
+          final initialPreferences = await repository.getPreferences();
           expect(initialPreferences.themeMode, equals(ThemeMode.system));
 
           // When - user changes to dark theme
-          await useCase.updateThemeMode(ThemeMode.dark);
+          final updated = initialPreferences.copyWith(themeMode: ThemeMode.dark);
+          await repository.savePreferences(updated);
 
           // Then - preferences are updated
-          final updatedPreferences = await useCase.getPreferences();
+          final updatedPreferences = await repository.getPreferences();
           expect(updatedPreferences.themeMode, equals(ThemeMode.dark));
         },
       );
@@ -36,13 +34,16 @@ void main() {
         'Given dark theme selected, When user changes to light theme, Then preferences are updated',
         () async {
           // Given - dark theme selected
-          await useCase.updateThemeMode(ThemeMode.dark);
+          var prefs = await repository.getPreferences();
+          prefs = prefs.copyWith(themeMode: ThemeMode.dark);
+          await repository.savePreferences(prefs);
 
           // When - user changes to light theme
-          await useCase.updateThemeMode(ThemeMode.light);
+          prefs = prefs.copyWith(themeMode: ThemeMode.light);
+          await repository.savePreferences(prefs);
 
           // Then - preferences are updated
-          final updatedPreferences = await useCase.getPreferences();
+          final updatedPreferences = await repository.getPreferences();
           expect(updatedPreferences.themeMode, equals(ThemeMode.light));
         },
       );
@@ -53,14 +54,15 @@ void main() {
         'Given default locale, When user changes to Spanish, Then preferences are updated',
         () async {
           // Given - default locale
-          final initialPreferences = await useCase.getPreferences();
+          final initialPreferences = await repository.getPreferences();
           expect(initialPreferences.locale, equals(const Locale('en', 'US')));
 
           // When - user changes to Spanish
-          await useCase.updateLocale(const Locale('es', 'ES'));
+          final updated = initialPreferences.copyWith(locale: const Locale('es', 'ES'));
+          await repository.savePreferences(updated);
 
           // Then - preferences are updated
-          final updatedPreferences = await useCase.getPreferences();
+          final updatedPreferences = await repository.getPreferences();
           expect(updatedPreferences.locale, equals(const Locale('es', 'ES')));
         },
       );
@@ -69,14 +71,15 @@ void main() {
         'Given English locale, When user changes to Danish, Then preferences are updated',
         () async {
           // Given - English locale (default)
-          final initialPreferences = await useCase.getPreferences();
+          final initialPreferences = await repository.getPreferences();
           expect(initialPreferences.locale, equals(const Locale('en', 'US')));
 
           // When - user changes to Danish
-          await useCase.updateLocale(const Locale('da', 'DK'));
+          final updated = initialPreferences.copyWith(locale: const Locale('da', 'DK'));
+          await repository.savePreferences(updated);
 
           // Then - preferences are updated
-          final updatedPreferences = await useCase.getPreferences();
+          final updatedPreferences = await repository.getPreferences();
           expect(updatedPreferences.locale, equals(const Locale('da', 'DK')));
         },
       );
@@ -91,10 +94,10 @@ void main() {
             themeMode: ThemeMode.dark,
             locale: Locale('fr', 'FR'),
           );
-          await useCase.updatePreferences(testPreferences);
+          await repository.savePreferences(testPreferences);
 
           // When - retrieving preferences
-          final retrievedPreferences = await useCase.getPreferences();
+          final retrievedPreferences = await repository.getPreferences();
 
           // Then - correct values are returned
           expect(retrievedPreferences.themeMode, equals(ThemeMode.dark));
@@ -110,14 +113,17 @@ void main() {
           // Given - listening to preferences stream
           final streamEvents = <UserPreferences>[];
 
-          final subscription = useCase.preferencesStream.listen((preferences) {
+          final subscription = repository.preferencesStream.listen((preferences) {
             streamEvents.add(preferences);
           });
 
           // When - preferences change
-          await useCase.updateThemeMode(ThemeMode.dark);
+          final prefs = await repository.getPreferences();
+          final updated = prefs.copyWith(themeMode: ThemeMode.dark);
+          await repository.savePreferences(updated);
 
           // Then - stream should have emitted at least one event
+          await Future.delayed(const Duration(milliseconds: 10)); // Wait for stream
           expect(streamEvents.length, greaterThanOrEqualTo(1));
           expect(streamEvents.last.themeMode, equals(ThemeMode.dark));
 

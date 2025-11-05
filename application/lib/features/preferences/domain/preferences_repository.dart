@@ -1,4 +1,4 @@
-import '../entities/user_preferences.dart';
+import 'user_preferences.dart';
 
 /// Repository interface for user preferences storage
 abstract class PreferencesRepository {

@@ -1,6 +1,6 @@
 import 'dart:async';
-import '../../domain/entities/user_preferences.dart';
-import '../../domain/repositories/preferences_repository.dart';
+import '../domain/user_preferences.dart';
+import '../domain/preferences_repository.dart';
 
 /// In-memory implementation of preferences repository
 /// TODO: Replace with persistent storage (SharedPreferences, Hive, etc.)

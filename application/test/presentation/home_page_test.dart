@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trick_or_treat_finder/main.dart';
 import 'package:trick_or_treat_finder/core/dependency_injection.dart';
-import 'package:trick_or_treat_finder/presentation/settings/settings_page.dart';
 
 /// Widget tests for HomePage
 /// 
@@ -18,10 +18,15 @@ void main() {
     await initializeDependencies();
   });
 
+  /// Helper to wrap app in ProviderScope for tests
+  Widget createTestApp() {
+    return const ProviderScope(child: TrickOrTreatApp());
+  }
+
   group('HomePage Widget Tests', () {
     testWidgets('displays welcome message and app title', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(const TrickOrTreatApp());
+      await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
       // Assert
@@ -35,7 +40,7 @@ void main() {
 
     testWidgets('displays location icon', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(const TrickOrTreatApp());
+      await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
       // Assert
@@ -44,7 +49,7 @@ void main() {
 
     testWidgets('displays settings button in app bar', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(const TrickOrTreatApp());
+      await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
       // Assert
@@ -53,7 +58,7 @@ void main() {
 
     testWidgets('displays Find Treats floating action button', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(const TrickOrTreatApp());
+      await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
       // Assert
@@ -64,7 +69,7 @@ void main() {
     testWidgets('navigates to settings page when settings button tapped',
         (tester) async {
       // Arrange
-      await tester.pumpWidget(const TrickOrTreatApp());
+      await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
       // Act
@@ -79,7 +84,7 @@ void main() {
 
     testWidgets('can navigate back from settings to home', (tester) async {
       // Arrange
-      await tester.pumpWidget(const TrickOrTreatApp());
+      await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
       // Navigate to settings
@@ -97,7 +102,7 @@ void main() {
     testWidgets('Find Treats button is tappable but does nothing yet',
         (tester) async {
       // Arrange
-      await tester.pumpWidget(const TrickOrTreatApp());
+      await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
       // Act
@@ -111,7 +116,7 @@ void main() {
     testWidgets('respects system theme mode during initialization',
         (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(const TrickOrTreatApp());
+      await tester.pumpWidget(createTestApp());
 
       // Assert - Loading indicator should be visible initially
       expect(find.byType(CircularProgressIndicator), findsOneWidget);

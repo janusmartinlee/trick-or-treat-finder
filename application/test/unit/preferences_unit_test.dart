@@ -1,17 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
-import 'package:trick_or_treat_finder/domain/entities/user_preferences.dart';
-import 'package:trick_or_treat_finder/infrastructure/repositories/in_memory_preferences_repository.dart';
-import 'package:trick_or_treat_finder/application/use_cases/preferences_use_case.dart';
+import 'package:trick_or_treat_finder/features/preferences/domain/user_preferences.dart';
+import 'package:trick_or_treat_finder/features/preferences/infrastructure/in_memory_preferences_repository.dart';
 
 void main() {
   group('Unit Tests: User Preferences Logic', () {
     late InMemoryPreferencesRepository repository;
-    late PreferencesUseCase useCase;
 
     setUp(() {
       repository = InMemoryPreferencesRepository();
-      useCase = PreferencesUseCase(repository);
     });
 
     tearDown(() {
@@ -23,7 +20,7 @@ void main() {
       () async {
         // Given - default preferences
         // When - getting preferences
-        final preferences = await useCase.getPreferences();
+        final preferences = await repository.getPreferences();
 
         // Then - returns system theme and EN locale
         expect(preferences.themeMode, equals(ThemeMode.system));
@@ -35,14 +32,15 @@ void main() {
       'Given system theme, When updating to dark theme, Then theme mode changes to dark',
       () async {
         // Given - system theme (default)
-        final initialPreferences = await useCase.getPreferences();
+        final initialPreferences = await repository.getPreferences();
         expect(initialPreferences.themeMode, equals(ThemeMode.system));
 
         // When - updating to dark theme
-        await useCase.updateThemeMode(ThemeMode.dark);
+        final updated = initialPreferences.copyWith(themeMode: ThemeMode.dark);
+        await repository.savePreferences(updated);
 
         // Then - theme mode changes to dark
-        final updatedPreferences = await useCase.getPreferences();
+        final updatedPreferences = await repository.getPreferences();
         expect(updatedPreferences.themeMode, equals(ThemeMode.dark));
         expect(
           updatedPreferences.locale,
@@ -55,14 +53,15 @@ void main() {
       'Given EN locale, When updating to ES locale, Then locale changes to Spanish',
       () async {
         // Given - EN locale (default)
-        final initialPreferences = await useCase.getPreferences();
+        final initialPreferences = await repository.getPreferences();
         expect(initialPreferences.locale, equals(const Locale('en', 'US')));
 
         // When - updating to ES locale
-        await useCase.updateLocale(const Locale('es', 'ES'));
+        final updated = initialPreferences.copyWith(locale: const Locale('es', 'ES'));
+        await repository.savePreferences(updated);
 
         // Then - locale changes to Spanish
-        final updatedPreferences = await useCase.getPreferences();
+        final updatedPreferences = await repository.getPreferences();
         expect(updatedPreferences.locale, equals(const Locale('es', 'ES')));
         expect(
           updatedPreferences.themeMode,
@@ -76,14 +75,17 @@ void main() {
       () async {
         // Given - listening to preferences stream
         final streamUpdates = <UserPreferences>[];
-        final subscription = useCase.preferencesStream.listen(
+        final subscription = repository.preferencesStream.listen(
           streamUpdates.add,
         );
 
         // When - changing preferences
-        await useCase.updateThemeMode(ThemeMode.dark);
+        final current = await repository.getPreferences();
+        final updated = current.copyWith(themeMode: ThemeMode.dark);
+        await repository.savePreferences(updated);
 
         // Then - stream emits updates
+        await Future.delayed(const Duration(milliseconds: 10)); // Wait for stream
         expect(streamUpdates.length, equals(1));
         expect(streamUpdates.first.themeMode, equals(ThemeMode.dark));
 
@@ -96,12 +98,16 @@ void main() {
       () async {
         // Given - default preferences
         // When - applying multiple changes
-        await useCase.updateThemeMode(ThemeMode.dark);
-        await useCase.updateLocale(const Locale('fr', 'FR'));
-        await useCase.updateThemeMode(ThemeMode.light);
+        var prefs = await repository.getPreferences();
+        prefs = prefs.copyWith(themeMode: ThemeMode.dark);
+        await repository.savePreferences(prefs);
+        prefs = prefs.copyWith(locale: const Locale('fr', 'FR'));
+        await repository.savePreferences(prefs);
+        prefs = prefs.copyWith(themeMode: ThemeMode.light);
+        await repository.savePreferences(prefs);
 
         // Then - all changes persist
-        final finalPreferences = await useCase.getPreferences();
+        final finalPreferences = await repository.getPreferences();
         expect(finalPreferences.themeMode, equals(ThemeMode.light));
         expect(finalPreferences.locale, equals(const Locale('fr', 'FR')));
       },

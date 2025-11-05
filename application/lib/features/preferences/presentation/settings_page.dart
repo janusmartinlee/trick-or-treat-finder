@@ -1,90 +1,74 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../core/dependency_injection.dart';
-import '../../application/use_cases/preferences_use_case.dart';
-import '../../l10n/app_localizations.dart';
-import 'settings_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../l10n/app_localizations.dart';
+import '../application/preferences_providers.dart';
 
-class SettingsPage extends StatelessWidget {
+/// Settings page for managing user preferences
+/// 
+/// Uses Riverpod for state management:
+/// - Watches preferencesNotifierProvider for current preferences
+/// - Calls notifier methods to update preferences
+/// - Automatically rebuilds when preferences change
+class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          SettingsBloc(serviceLocator<PreferencesUseCase>())
-            ..add(LoadSettings()),
-      child: const SettingsView(),
-    );
-  }
-}
-
-class SettingsView extends StatelessWidget {
-  const SettingsView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final localizations = AppLocalizations.of(context)!;
+    final preferencesAsync = ref.watch(preferencesNotifierProvider);
 
     return Scaffold(
       appBar: AppBar(title: Text(localizations.settings)),
-      body: BlocBuilder<SettingsBloc, SettingsState>(
-        builder: (context, state) {
-          if (state is SettingsLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state is SettingsError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 64,
-                    color: Theme.of(context).colorScheme.error,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Error loading settings',
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    state.message,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<SettingsBloc>().add(LoadSettings());
-                    },
-                    child: const Text('Retry'),
-                  ),
-                ],
+      body: preferencesAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stackTrace) => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.error_outline,
+                size: 64,
+                color: Theme.of(context).colorScheme.error,
               ),
-            );
-          }
-
-          if (state is SettingsLoaded) {
-            return ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                _buildThemeSection(context, state),
-                const SizedBox(height: 24),
-                _buildLanguageSection(context, state),
-              ],
-            );
-          }
-
-          return const SizedBox.shrink();
-        },
+              const SizedBox(height: 16),
+              Text(
+                'Error loading settings',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                error.toString(),
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  // Trigger reload by invalidating the provider
+                  ref.invalidate(preferencesNotifierProvider);
+                },
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+        data: (preferences) => ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            _buildThemeSection(context, ref, preferences),
+            const SizedBox(height: 24),
+            _buildLanguageSection(context, ref, preferences),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildThemeSection(BuildContext context, SettingsLoaded state) {
+  Widget _buildThemeSection(
+    BuildContext context,
+    WidgetRef ref,
+    preferences,
+  ) {
     final localizations = AppLocalizations.of(context)!;
 
     return Card(
@@ -109,26 +93,29 @@ class SettingsView extends StatelessWidget {
             const SizedBox(height: 16),
             _buildThemeOption(
               context,
+              ref,
               'System Default',
               'Follow device theme',
               ThemeMode.system,
-              state.preferences.themeMode,
+              preferences.themeMode,
               Icons.settings_system_daydream,
             ),
             _buildThemeOption(
               context,
+              ref,
               'Light',
               'Light theme',
               ThemeMode.light,
-              state.preferences.themeMode,
+              preferences.themeMode,
               Icons.light_mode,
             ),
             _buildThemeOption(
               context,
+              ref,
               'Dark',
               'Dark theme',
               ThemeMode.dark,
-              state.preferences.themeMode,
+              preferences.themeMode,
               Icons.dark_mode,
             ),
           ],
@@ -139,6 +126,7 @@ class SettingsView extends StatelessWidget {
 
   Widget _buildThemeOption(
     BuildContext context,
+    WidgetRef ref,
     String title,
     String subtitle,
     ThemeMode themeMode,
@@ -148,12 +136,10 @@ class SettingsView extends StatelessWidget {
     return ListTile(
       leading: Radio<ThemeMode>(
         value: themeMode,
-        // ignore: deprecated_member_use
         groupValue: currentTheme,
-        // ignore: deprecated_member_use
         onChanged: (value) {
           if (value != null) {
-            context.read<SettingsBloc>().add(UpdateThemeMode(value));
+            ref.read(preferencesNotifierProvider.notifier).updateThemeMode(value);
           }
         },
       ),
@@ -162,20 +148,21 @@ class SettingsView extends StatelessWidget {
       ),
       subtitle: Text(subtitle),
       onTap: () {
-        context.read<SettingsBloc>().add(UpdateThemeMode(themeMode));
+        ref.read(preferencesNotifierProvider.notifier).updateThemeMode(themeMode);
       },
     );
   }
 
-  Widget _buildLanguageSection(BuildContext context, SettingsLoaded state) {
+  Widget _buildLanguageSection(
+    BuildContext context,
+    WidgetRef ref,
+    preferences,
+  ) {
     final localizations = AppLocalizations.of(context)!;
 
     const supportedLocales = [
       Locale('en', 'US'),
       Locale('da', 'DK'),
-      // Add more locales when translations are available
-      // Locale('es', 'ES'),
-      // Locale('fr', 'FR'),
     ];
 
     return Card(
@@ -201,9 +188,10 @@ class SettingsView extends StatelessWidget {
             ...supportedLocales.map(
               (locale) => _buildLanguageOption(
                 context,
+                ref,
                 _getLanguageName(locale),
                 locale,
-                state.preferences.locale,
+                preferences.locale,
               ),
             ),
           ],
@@ -214,6 +202,7 @@ class SettingsView extends StatelessWidget {
 
   Widget _buildLanguageOption(
     BuildContext context,
+    WidgetRef ref,
     String title,
     Locale locale,
     Locale currentLocale,
@@ -221,12 +210,10 @@ class SettingsView extends StatelessWidget {
     return ListTile(
       leading: Radio<Locale>(
         value: locale,
-        // ignore: deprecated_member_use
         groupValue: currentLocale,
-        // ignore: deprecated_member_use
         onChanged: (value) {
           if (value != null) {
-            context.read<SettingsBloc>().add(UpdateLocale(value));
+            ref.read(preferencesNotifierProvider.notifier).updateLocale(value);
           }
         },
       ),
@@ -241,7 +228,7 @@ class SettingsView extends StatelessWidget {
         '${locale.languageCode.toUpperCase()} - ${locale.countryCode}',
       ),
       onTap: () {
-        context.read<SettingsBloc>().add(UpdateLocale(locale));
+        ref.read(preferencesNotifierProvider.notifier).updateLocale(locale);
       },
     );
   }
@@ -272,7 +259,7 @@ class SettingsView extends StatelessWidget {
       case 'FR':
         return '🇫🇷';
       default:
-        return '🌍'; // Globe emoji as fallback
+        return '🌍';
     }
   }
 }

@@ -1,10 +1,13 @@
 import 'package:get_it/get_it.dart';
 import 'telemetry/telemetry_service.dart';
-import '../domain/repositories/preferences_repository.dart';
-import '../infrastructure/repositories/in_memory_preferences_repository.dart';
-import '../application/use_cases/preferences_use_case.dart';
+import '../features/preferences/domain/preferences_repository.dart';
+import '../features/preferences/infrastructure/in_memory_preferences_repository.dart';
 
 /// Service locator for dependency injection
+/// 
+/// Used by Riverpod providers to access infrastructure implementations.
+/// Riverpod handles the application and presentation layers, while
+/// get_it manages infrastructure dependencies.
 final GetIt serviceLocator = GetIt.instance;
 
 /// Initialize all dependencies
@@ -19,14 +22,10 @@ Future<void> initializeDependencies() async {
     () => TelemetryService.instance,
   );
 
-  // Repositories
+  // Preferences feature - Infrastructure layer only
+  // Application logic is now handled by Riverpod providers
   serviceLocator.registerLazySingleton<PreferencesRepository>(
     () => InMemoryPreferencesRepository(),
-  );
-
-  // Use cases
-  serviceLocator.registerLazySingleton<PreferencesUseCase>(
-    () => PreferencesUseCase(serviceLocator<PreferencesRepository>()),
   );
 }
 

@@ -7,10 +7,11 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:trick_or_treat_finder/main.dart';
 import 'package:trick_or_treat_finder/core/dependency_injection.dart';
-import 'package:trick_or_treat_finder/application/use_cases/preferences_use_case.dart';
+import 'package:trick_or_treat_finder/features/preferences/domain/preferences_repository.dart';
 
 void main() {
   setUp(() async {
@@ -18,13 +19,18 @@ void main() {
     await initializeDependencies();
   });
 
+  /// Helper to wrap app in ProviderScope for tests
+  Widget createTestApp() {
+    return const ProviderScope(child: TrickOrTreatApp());
+  }
+
   testWidgets('App starts and displays welcome message', (
     WidgetTester tester,
   ) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const TrickOrTreatApp());
+    await tester.pumpWidget(createTestApp());
 
-    // Wait for the app to build completely (since AppBloc is async)
+    // Wait for the app to build completely
     await tester.pumpAndSettle();
 
     // Verify that our welcome message is displayed.
@@ -34,11 +40,12 @@ void main() {
 
   testWidgets('App supports Danish language', (WidgetTester tester) async {
     // Set language to Danish
-    final preferencesUseCase = serviceLocator<PreferencesUseCase>();
-    await preferencesUseCase.updateLocale(const Locale('da', 'DK'));
+    final repository = serviceLocator<PreferencesRepository>();
+    final prefs = await repository.getPreferences();
+    await repository.savePreferences(prefs.copyWith(locale: const Locale('da', 'DK')));
 
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const TrickOrTreatApp());
+    await tester.pumpWidget(createTestApp());
 
     // Wait for the app to build completely (since AppBloc is async)
     await tester.pumpAndSettle();
